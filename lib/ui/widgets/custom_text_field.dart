@@ -28,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.enable,
     this.onSuffixPressed,
     this.onPrefixPressed,
+    this.onTap,
   });
 
   final String? hint;
@@ -52,13 +53,14 @@ class CustomTextField extends StatefulWidget {
   final Function(String)? onSubmitted;
   final Function()? onSuffixPressed;
   final Function()? onPrefixPressed;
+  final Function()? onTap;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  final FocusNode _focus = FocusNode();
+  FocusNode _focus = FocusNode();
   bool _isFocus = false;
   bool _isObscureText = false;
 
@@ -66,6 +68,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   void initState() {
     super.initState();
     _isObscureText = widget.obscureText;
+    if (widget.focusNode != null) {
+      _focus = widget.focusNode!;
+    }
     _focus.addListener(_onFocusChange);
   }
 
@@ -96,7 +101,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+      onTap: widget.onTap,
       focusNode: _focus,
+      enabled: widget.enable,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
       controller: widget.controller,

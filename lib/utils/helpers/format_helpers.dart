@@ -1,5 +1,3 @@
-import 'package:teen_match/util/app_constants.dart';
-
 class FormatHelpers {
   static String formatValue(String value) {
     if (value.contains('null')) {
@@ -18,9 +16,8 @@ class FormatHelpers {
     return result;
   }
 
-  static String email(String username) {
-    String result = formatValue(username);
-    result += AppConstants.emailEndpoint;
-    return result;
+  static String upperFirstCharacter(String value) {
+    String firstStr = value[0];
+    return '${firstStr.toUpperCase()}${value.substring(1)}';
   }
 }

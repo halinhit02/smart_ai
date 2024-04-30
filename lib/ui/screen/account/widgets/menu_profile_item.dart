@@ -51,7 +51,7 @@ class MenuProfileItem extends StatelessWidget {
                 title,
                 style: titleStyle ??
                     Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Colors.grey.shade900,
                         ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/ui/widgets/assistant_item.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
@@ -16,13 +17,14 @@ class AssistantAllWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AssistantController assistantController = Get.find();
     List<String> menuAssistantList = AppConstants.menuAssistants.sublist(1);
     return Scaffold(
       body: ListView.builder(
           itemCount: menuAssistantList.length,
           itemBuilder: (itemCtx, index) {
-            var selectedAssistants = AppConstants.assistants
-                .where((element) => element['type'] == menuAssistantList[index])
+            var selectedAssistants = assistantController.assistantList
+                .where((element) => element.type == menuAssistantList[index])
                 .toList();
             return Container(
               margin: const EdgeInsets.only(
@@ -69,7 +71,7 @@ class AssistantAllWidget extends StatelessWidget {
                     height: Dimensions.radiusSizeDefault,
                   ),
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 220),
+                    constraints: const BoxConstraints(maxHeight: 236),
                     child: ListView.builder(
                       itemExtent: 185,
                       shrinkWrap: true,
@@ -78,9 +80,8 @@ class AssistantAllWidget extends StatelessWidget {
                       itemBuilder: (itemCtx, index) => GestureDetector(
                         onTap: () {
                           Get.toNamed(AppRoutes.createAssistantChat(
-                            selectedAssistants[index]['title'].toString(),
-                            selectedAssistants[index]['description'].toString(),
-                            selectedAssistants[index]['index'].toString(),
+                            selectedAssistants[index].title,
+                            selectedAssistants[index].id,
                           ));
                         },
                         child: AssistantItem(

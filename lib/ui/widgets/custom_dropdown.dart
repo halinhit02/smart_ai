@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 class CustomDropdownButton<T> extends StatefulWidget {
@@ -12,11 +11,11 @@ class CustomDropdownButton<T> extends StatefulWidget {
     this.value,
     this.itemStyle,
     this.buttonHeight = kMinInteractiveDimension,
-    this.buttonWidth = 72,
+    this.buttonWidth,
     this.buttonPadding,
     this.menuItemPadding,
     this.dropdownColor,
-    this.alignment = AlignmentDirectional.center,
+    this.alignment = AlignmentDirectional.centerEnd,
     this.onChanged,
   });
 
@@ -26,7 +25,7 @@ class CustomDropdownButton<T> extends StatefulWidget {
   final T? value;
   final TextStyle? itemStyle;
   final double buttonHeight;
-  final double buttonWidth;
+  final double? buttonWidth;
   final EdgeInsets? buttonPadding;
   final EdgeInsets? menuItemPadding;
   final Color? dropdownColor;
@@ -61,11 +60,18 @@ class _CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>> {
             value: widget.values[index],
             child: Text(
               widget.items[index].toString(),
+              overflow: TextOverflow.ellipsis,
               style: widget.itemStyle ?? Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ).toList(),
-        hint: Text(widget.hint),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+        hint: Text(
+          widget.hint,
+          overflow: TextOverflow.ellipsis,
+        ),
         value: selectedValue,
         menuItemStyleData: MenuItemStyleData(
           padding: widget.menuItemPadding,
@@ -73,9 +79,13 @@ class _CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>> {
         buttonStyleData: ButtonStyleData(
             height: widget.buttonHeight,
             width: widget.buttonWidth,
-            padding: widget.buttonPadding,
+            padding: widget.buttonPadding ??
+                const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeSmall,
+                ),
             elevation: 0,
             decoration: BoxDecoration(
+              color: widget.dropdownColor,
               borderRadius: BorderRadius.circular(
                 Dimensions.radiusSizeDefault,
               ),
@@ -85,8 +95,7 @@ class _CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>> {
           if (value != null) {
             selectedValue = value;
             widget.onChanged?.call(value);
-            setState(() {
-            });
+            setState(() {});
           }
         },
       ),

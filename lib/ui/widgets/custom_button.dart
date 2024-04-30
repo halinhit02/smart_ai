@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
     this.color,
     this.borderRadius,
     this.borderSide = BorderSide.none,
+    this.elevation = 0,
     this.padding,
     this.textColor,
     this.textStyle,
@@ -24,6 +25,7 @@ class CustomButton extends StatelessWidget {
   final Color? color;
   final BorderRadius? borderRadius;
   final BorderSide borderSide;
+  final double elevation;
   final EdgeInsets? padding;
   final Color? textColor;
   final TextStyle? textStyle;
@@ -38,7 +40,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: loading ? null : onTap,
-      elevation: 0,
+      elevation: elevation,
       hoverElevation: 0,
       focusElevation: 0,
       color: loading ? null : color ?? Theme.of(context).colorScheme.primary,

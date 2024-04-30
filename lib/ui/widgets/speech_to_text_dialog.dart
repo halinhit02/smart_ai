@@ -4,9 +4,14 @@ import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 import 'package:smart_ai/utils/constants/my_icons.dart';
 
-class SpeechToTechWidget extends StatelessWidget {
+class SpeechToTechWidget extends StatefulWidget {
   const SpeechToTechWidget({super.key});
 
+  @override
+  State<SpeechToTechWidget> createState() => _SpeechToTechWidgetState();
+}
+
+class _SpeechToTechWidgetState extends State<SpeechToTechWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,34 +33,22 @@ class SpeechToTechWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(
-            height: Dimensions.paddingSizeLarge,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
-              shape: BoxShape.circle,
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 250,
             ),
-            padding: const EdgeInsets.all(
-              Dimensions.paddingSizeLarge,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Align(
+                    alignment: Alignment.center,
+                    child: CustomImage(
+                      path: MyIcons.voice,
+                      size: 42,
+                      color: Colors.white,
+                    )),
+              ],
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-              padding: const EdgeInsets.all(
-                Dimensions.paddingSizeExtraLarge,
-              ),
-              child: const CustomImage(
-                path: MyIcons.voice,
-                size: 42,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: Dimensions.paddingSizeLarge,
           ),
           Text(
             'Try saying something',

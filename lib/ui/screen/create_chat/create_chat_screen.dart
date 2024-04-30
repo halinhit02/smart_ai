@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/chat_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_dropdown.dart';
-import 'package:smart_ai/utils/constants/app_config.dart';
-import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 import '../../../utils/constants/app_constants.dart';
@@ -16,15 +15,21 @@ class CreateChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var chatController = Get.find<ChatController>();
+    var messageController = TextEditingController();
+    chatController.selectedModel = chatController.chatModels.first;
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppConstants.appName,
         actions: [
           CustomDropdownButton<String>(
-            items: AppConfig.chatModels,
-            values: AppConfig.chatModels,
+            items: chatController.chatModelName,
+            values: chatController.chatModels,
             hint: 'Model',
-            buttonWidth: 120,
+            onChanged: (value) {
+              chatController.selectedModel =
+                  value ?? chatController.chatModels.first;
+            },
           ),
         ],
       ),
@@ -36,21 +41,21 @@ class CreateChatScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(
-                      height: Dimensions.paddingSizeLarge * 2,
+                      height: Dimensions.paddingSizeExtraLarge,
                     ),
                     CustomImage(
                       path: Images.intelligence,
-                      width: 72,
+                      width: 84,
                       color: Colors.grey.shade400,
                     ),
                     const SizedBox(
-                      height: Dimensions.paddingSizeExtraLarge,
+                      height: Dimensions.paddingSizeLarge,
                     ),
                     Text(
                       'Capabilities',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade400,
+                            color: Colors.grey,
                           ),
                     ),
                     const SizedBox(
@@ -66,7 +71,7 @@ class CreateChatScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                             Dimensions.radiusSizeDefault,
                           ),
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
                         ),
                         margin: const EdgeInsets.symmetric(
                           vertical: Dimensions.paddingSizeSmall - 3,
@@ -81,7 +86,7 @@ class CreateChatScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey,
+                                    color: Colors.grey.shade600,
                                     fontWeight: FontWeight.w500,
                                   ),
                         ),
@@ -102,12 +107,19 @@ class CreateChatScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.paddingSizeLarge,
                 vertical: Dimensions.paddingSizeExtraSmall,
               ),
-              child: MessageFieldWidget(
-                onTap: () => Get.toNamed(AppRoutes.chatRoute),
+              child: Obx(
+                () => MessageFieldWidget(
+                    controller: messageController,
+                    loading: chatController.createLoading.value,
+                    onTap: () {
+                      chatController
+                          .createChat(messageController.text)
+                          .then((value) => messageController.clear());
+                    }),
               ),
             ),
           ],

@@ -1,47 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/message_field_widget.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
-import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
-import '../../../utils/constants/app_config.dart';
-import '../../widgets/custom_dropdown.dart';
+import '../../../controller/chat_controller.dart';
 
 class CreateAssistantScreen extends StatelessWidget {
   const CreateAssistantScreen({
     super.key,
-    this.title,
-    this.description,
-    this.index,
+    required this.title,
+    required this.index,
   });
 
-  final String? title;
-  final String? description;
-  final String? index;
+  final String title;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    var somethingLikes = AppConstants.somethingLikes[index] ?? [];
+    var chatController = Get.find<ChatController>();
+    var assistantController = Get.find<AssistantController>();
+    var messageController = TextEditingController();
+    var somethingLikes = AppConstants.somethingLikes[index.toString()] ?? [];
+    var assistantModel = assistantController.assistantList[index];
+    chatController.selectedModel = assistantModel.model;
     return Scaffold(
       appBar: CustomAppBar(
         title: title,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: Dimensions.paddingSizeLarge,
-              left: Dimensions.paddingSizeSmall,
-            ),
-            child: CustomDropdownButton<String>(
-              items: AppConfig.chatModels,
-              values: AppConfig.chatModels,
-              hint: 'Model',
-              buttonWidth: 120,
-              onChanged: (value) {},
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -52,55 +39,80 @@ class CreateAssistantScreen extends StatelessWidget {
             children: [
               Expanded(
                   child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Type something like:',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Type something like:',
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey,
+                          color: Colors.grey.shade600,
                         ),
-                  ),
-                  const SizedBox(
-                    height: Dimensions.paddingSizeLarge,
-                  ),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: somethingLikes.length,
-                      itemBuilder: (itemCtx, index) => Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                      ),
+                      const SizedBox(
+                        height: Dimensions.paddingSizeLarge,
+                      ),
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) =>
+                          const SizedBox(
+                            height: Dimensions.radiusSizeDefault,
+                          ),
+                          itemCount: somethingLikes.length,
+                          itemBuilder: (itemCtx, index) =>
+                              InkWell(
                                 borderRadius: BorderRadius.circular(
                                   Dimensions.radiusSizeLarge,
-                                )),
-                            margin: const EdgeInsets.only(
-                                bottom: Dimensions.radiusSizeDefault),
-                            padding: const EdgeInsets.all(
-                              Dimensions.paddingSizeLarge,
-                            ),
-                            child: Text(
-                              somethingLikes[index],
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                                ),
+                                onTap: () {
+                                  chatController
+                                      .createChat(somethingLikes[index])
+                                      .then((value) =>
+                                      messageController.clear());
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade100,
+                                      borderRadius: BorderRadius.circular(
+                                        Dimensions.radiusSizeLarge,
+                                      )),
+                                  padding: const EdgeInsets.all(
+                                    Dimensions.paddingSizeLarge,
                                   ),
-                            ),
-                          ))
-                ],
-              )),
+                                  child: Text(
+                                    somethingLikes[index],
+                                    textAlign: TextAlign.center,
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ),
+                              ))
+                    ],
+                  )),
               const SizedBox(
                 height: Dimensions.paddingSizeLarge,
               ),
-              MessageFieldWidget(
-                onTap: () {
-                  Get.toNamed(AppRoutes.chatRoute);
-                },
+              Obx(
+                    () =>
+                    MessageFieldWidget(
+                        controller: messageController,
+                        loading: chatController.createLoading.value,
+                        onTap: () {
+                          chatController
+                              .createChat(messageController.text)
+                              .then((value) => messageController.clear());
+                        }),
               ),
             ],
           ),

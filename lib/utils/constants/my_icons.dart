@@ -16,6 +16,8 @@ class MyIcons {
   static const historyActive = '$basePath/ic_history_active.svg';
   static const profileInactive = '$basePath/ic_profile_inactive.svg';
   static const profileActive = '$basePath/ic_profile_active.svg';
+  static const imageInactive = '$basePath/ic_image_inactive.svg';
+  static const imageActive = '$basePath/ic_image_active.svg';
   static const delete = '$basePath/ic_delete.svg';
   static const arrowLeft = '$basePath/ic_arrow_left.svg';
   static const personalInfo = '$basePath/ic_personal.svg';

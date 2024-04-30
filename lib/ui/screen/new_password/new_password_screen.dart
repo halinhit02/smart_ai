@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_button.dart';
 import 'package:smart_ai/ui/widgets/label_text_field_widget.dart';
-import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 class NewPasswordScreen extends StatelessWidget {
@@ -12,6 +12,10 @@ class NewPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController rePasswordController = TextEditingController();
+    AuthController authController = Get.find();
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SafeArea(
@@ -47,7 +51,7 @@ class NewPasswordScreen extends StatelessWidget {
                       label: 'New Password',
                       hint: 'New Password',
                       obscureText: true,
-                      controller: TextEditingController(),
+                      controller: passwordController,
                     ),
                     const SizedBox(
                       height: Dimensions.paddingSizeLarge,
@@ -57,7 +61,7 @@ class NewPasswordScreen extends StatelessWidget {
                       label: 'Confirm New Password',
                       hint: 'Confirm New Password',
                       obscureText: true,
-                      controller: TextEditingController(),
+                      controller: rePasswordController,
                     ),
                   ],
                 ),
@@ -68,11 +72,15 @@ class NewPasswordScreen extends StatelessWidget {
                 horizontal: Dimensions.paddingSizeLarge,
                 vertical: Dimensions.paddingSizeDefault,
               ),
-              child: CustomButton(
-                text: 'Save New Password',
-                onTap: () {
-                  Get.toNamed(AppRoutes.homeRoute);
-                },
+              child: Obx(
+                () => CustomButton(
+                  text: 'Save New Password',
+                  loading: authController.verifyLoading.value,
+                  onTap: () => authController.createNewPassword(
+                    passwordController.text,
+                    rePasswordController.text,
+                  ),
+                ),
               ),
             ),
           ],

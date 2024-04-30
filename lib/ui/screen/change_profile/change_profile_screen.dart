@@ -142,8 +142,8 @@ class ChangeProfileScreen extends StatelessWidget {
             ),
             child: Obx(
               () => CustomButton(
-                loading: authController.saveLoading.value,
-                onTap: () {},
+                loading: authController.updatingUser.value,
+                onTap: () => authController.editUser(userModel),
                 text: 'Save',
               ),
             ),

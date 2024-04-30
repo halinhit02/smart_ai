@@ -1,20 +1,25 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/screen/account/widgets/horizontal_title_widget.dart';
 import 'package:smart_ai/ui/screen/account/widgets/menu_profile_item.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_image.dart';
+import 'package:smart_ai/utils/constants/app_config.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
-import 'package:smart_ai/utils/constants/images.dart';
 import 'package:smart_ai/utils/constants/my_icons.dart';
+import 'package:smart_ai/utils/helpers/app_helper.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var authController = Get.find<AuthController>();
+    var privacyLink =
+        FirebaseRemoteConfig.instance.getString(AppConfig.privacyLinkKey);
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'Account',
@@ -42,117 +47,57 @@ class AccountScreen extends StatelessWidget {
                   width: Dimensions.paddingSizeDefault,
                 ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Andrew Ainslay',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        'andrew.ainsley@yourdomain.com',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade700,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(
-                  CupertinoIcons.right_chevron,
-                  size: 18,
+                  child: Obx(() => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            authController.userModel.value?.fullName ??
+                                'SmartAI User',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            authController.userModel.value?.email ?? '',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade700,
+                                ),
+                          ),
+                        ],
+                      )),
                 ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.only(
-                top: Dimensions.paddingSizeDefault,
-                bottom: Dimensions.paddingSizeDefault,
-                left: Dimensions.paddingSizeDefault,
-                right: Dimensions.paddingSizeDefault,
-              ),
-              margin: const EdgeInsets.only(
-                top: Dimensions.paddingSizeLarge,
-                bottom: Dimensions.paddingSizeSmall,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(
-                  Dimensions.radiusSizeLarge,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const CustomImage(
-                    path: Images.starUpgrade,
-                    size: 64,
-                  ),
-                  const SizedBox(
-                    width: Dimensions.paddingSizeDefault,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Upgrade to PRO!',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        Text(
-                          'Enjoy all benefits without restrictions',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey.shade50,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    CupertinoIcons.right_chevron,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ],
-              ),
+            const SizedBox(
+              height: Dimensions.paddingSizeLarge,
             ),
-            HorizontalTitleWidget(title: 'General'),
+            const HorizontalTitleWidget(title: 'General'),
             MenuProfileItem(
               iconPath: MyIcons.personalInfo,
-              title: 'Personal Info',
-              route: '',
+              title: 'Change Profile',
+              route: AppRoutes.changeProfileRoute,
             ),
             MenuProfileItem(
               iconPath: MyIcons.security,
-              title: 'Security',
+              title: 'Change Password',
+              route: AppRoutes.changePasswordRoute,
             ),
             MenuProfileItem(
-              iconPath: MyIcons.language,
-              title: 'Language',
+              iconPath: MyIcons.security,
+              title: 'Setting',
             ),
-            MenuProfileItem(
-              iconPath: MyIcons.darkMode,
-              title: 'Dark Mode',
-            ),
-            HorizontalTitleWidget(title: 'About'),
+            const HorizontalTitleWidget(title: 'About'),
             MenuProfileItem(
               iconPath: MyIcons.helpCenter,
               title: 'Help Center',
+              onTap: () => AppHelper.openLink(privacyLink),
             ),
             MenuProfileItem(
               iconPath: MyIcons.privacy,
               title: 'Privacy Policy',
-            ),
-            MenuProfileItem(
-              iconPath: MyIcons.helpCenter,
-              title: 'Help Center',
+              onTap: () => AppHelper.openLink(privacyLink),
             ),
             MenuProfileItem(
               iconPath: MyIcons.logout,
@@ -161,7 +106,7 @@ class AccountScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.red,
                   ),
-              onTap: () => Get.offAllNamed(AppRoutes.authRoute),
+              onTap: () => authController.signOut(),
             ),
           ],
         ),

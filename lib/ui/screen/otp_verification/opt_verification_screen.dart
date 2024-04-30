@@ -1,15 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
-import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 class OTPVerificationScreen extends StatelessWidget {
-  const OTPVerificationScreen({super.key});
+  const OTPVerificationScreen({
+    super.key,
+    required this.redirectRoute,
+  });
+
+  final String redirectRoute;
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController codeController = TextEditingController();
+    AuthController authController = Get.find();
+    Timer? countdownTimer;
+    RxInt remainDuration = 0.obs;
+
     final defaultPinTheme = PinTheme(
       width: (Get.width - 50) / 6,
       height: (Get.width - 50) / 6,
@@ -37,6 +49,17 @@ class OTPVerificationScreen extends StatelessWidget {
       ),
     );
 
+    void startCountDown() {
+      remainDuration.value = 60;
+      countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (remainDuration.value == 0) {
+          countdownTimer?.cancel();
+          return;
+        }
+        remainDuration.value -= 1;
+      });
+    }
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SingleChildScrollView(
@@ -57,33 +80,38 @@ class OTPVerificationScreen extends StatelessWidget {
               height: Dimensions.paddingSizeSmall,
             ),
             Text(
-              'We have sent an OTP code to your phone number 097****321. Enter the OTP code below to verify.',
+              'We have sent an OTP code to your phone number ${authController.phoneNumber}. Enter the OTP code below to verify.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(
               height: Dimensions.paddingSizeDefault,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: Dimensions.paddingSizeLarge,
-              ),
-              child: Pinput(
-                length: 6,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                defaultPinTheme: defaultPinTheme,
-                focusedPinTheme: focusedPinTheme,
-                submittedPinTheme: submittedPinTheme,
-                pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                androidSmsAutofillMethod:
-                    AndroidSmsAutofillMethod.smsRetrieverApi,
-                showCursor: true,
-                listenForMultipleSmsOnAndroid: true,
-                autofocus: true,
-                controller: TextEditingController(),
-                onCompleted: (code) {
-                  Get.toNamed(AppRoutes.newPassword);
-                },
-              ),
+            Obx(
+              () => authController.verifyOtpLoading.value
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimensions.paddingSizeLarge,
+                      ),
+                      child: Pinput(
+                        length: 6,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        defaultPinTheme: defaultPinTheme,
+                        focusedPinTheme: focusedPinTheme,
+                        submittedPinTheme: submittedPinTheme,
+                        pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                        androidSmsAutofillMethod:
+                            AndroidSmsAutofillMethod.smsRetrieverApi,
+                        showCursor: true,
+                        listenForMultipleSmsOnAndroid: true,
+                        autofocus: true,
+                        controller: codeController,
+                        onCompleted: (code) =>
+                            authController.verifyOtp(code, redirectRoute),
+                      ),
+                    ),
             ),
             const SizedBox(
               height: Dimensions.paddingSizeDefault,
@@ -94,7 +122,7 @@ class OTPVerificationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Didn't receive email?",
+                    "Didn't receive code?",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -102,25 +130,47 @@ class OTPVerificationScreen extends StatelessWidget {
                   const SizedBox(
                     height: Dimensions.paddingSizeSmall,
                   ),
-                  RichText(
-                    text: TextSpan(
-                      text: "You can resend code in ",
-                      children: [
-                        TextSpan(
-                            text: '52',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary,
-                                )),
-                        const TextSpan(text: ' s'),
-                      ],
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
+                  Obx(
+                    () => remainDuration.value > 0
+                        ? RichText(
+                            text: TextSpan(
+                              text: "You can resend code in ",
+                              children: [
+                                TextSpan(
+                                    text: remainDuration.value.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        )),
+                                const TextSpan(text: ' s'),
+                              ],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          )
+                        : TextButton(
+                            style: ButtonStyle(
+                                textStyle: MaterialStatePropertyAll(
+                              Theme.of(context).textTheme.bodyMedium,
+                            )),
+                            onPressed: () {
+                              startCountDown();
+                              authController
+                                  .verifyPhone(authController.phoneNumber);
+                            },
+                            child: Text(
+                              'Resend code'.tr,
+                            ),
                           ),
-                    ),
                   ),
                 ],
               ),

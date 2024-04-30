@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/utils/constants/dimensions.dart';
 
 class CustomImage extends StatelessWidget {
   const CustomImage({
@@ -54,6 +55,14 @@ class CustomImage extends StatelessWidget {
               color: color,
               colorBlendMode: blendMode,
               alignment: alignment,
+              progressIndicatorBuilder: (context, url, _) => const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingSizeSmall,
+                  ),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             )
           : path.endsWith('.svg')
               ? SvgPicture.asset(

@@ -19,6 +19,8 @@ class SignUpScreen extends StatelessWidget {
     AuthController authController = Get.find();
     TextEditingController phoneController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    TextEditingController rePasswordController = TextEditingController();
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SafeArea(
@@ -67,7 +69,18 @@ class SignUpScreen extends StatelessWidget {
                             prefixIcon: CupertinoIcons.lock_fill,
                             label: 'Password',
                             hint: 'Password',
+                            obscureText: true,
                             controller: passwordController,
+                          ),
+                          const SizedBox(
+                            height: Dimensions.paddingSizeLarge,
+                          ),
+                          LabelTextFieldWidget(
+                            prefixIcon: CupertinoIcons.lock_fill,
+                            label: 'Confirm password',
+                            hint: 'Confirm password',
+                            obscureText: true,
+                            controller: rePasswordController,
                           ),
                         ],
                       ),
@@ -151,10 +164,11 @@ class SignUpScreen extends StatelessWidget {
               child: Obx(
                 () => CustomButton(
                   text: 'Sign up',
-                  loading: authController.signUpLoading.value,
+                  loading: authController.verifyLoading.value,
                   onTap: () => authController.signUp(
                     phoneController.text.trim(),
                     passwordController.text.trim(),
+                    rePasswordController.text.trim(),
                   ),
                 ),
               ),

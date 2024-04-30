@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:smart_ai/model/assistant_model.dart';
 
 import '../../utils/constants/dimensions.dart';
 import 'custom_image.dart';
@@ -11,7 +12,7 @@ class AssistantItem extends StatelessWidget {
     this.margin,
   });
 
-  final Map<String, dynamic> item;
+  final AssistantModel item;
   final EdgeInsets? margin;
 
   @override
@@ -35,7 +36,7 @@ class AssistantItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomImage(
-            path: item['icon'],
+            path: item.icon,
             color: Colors.white,
             size: 32,
             padding: const EdgeInsets.symmetric(
@@ -45,25 +46,22 @@ class AssistantItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(
               Dimensions.radiusSizeDefault,
             ),
-            background: HexColor(item['color']),
+            background: HexColor(item.color),
           ),
           const SizedBox(
-            height: Dimensions.paddingSizeDefault,
+            height: Dimensions.paddingSizeSmall,
           ),
           Text(
-            item['title'] ?? '',
+            item.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(
-            height: Dimensions.paddingSizeExtraSmall,
-          ),
           Expanded(
             child: Text(
-              item['description'] ?? '',
+              item.description,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           )

@@ -7,4 +7,7 @@ class Images {
   static const onboard1 = '$basePath/onboard_1.png';
   static const onboard2 = '$basePath/onboard_2.png';
   static const onboard3 = '$basePath/onboard_3.png';
+  static const resetPassword = '$basePath/reset_password.svg';
+
+  static const generating = 'assets/lottie/generating.json';
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/screen/auth/widgets/not_account_widget.dart';
 import 'package:smart_ai/ui/screen/sign_in/widgets/remember_forgot_widget.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_button.dart';
 import 'package:smart_ai/ui/widgets/label_text_field_widget.dart';
-import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -14,8 +14,11 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController phoneController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
+    var authController = Get.find<AuthController>();
+    TextEditingController phoneController =
+        TextEditingController(text: authController.phoneNumber);
+    TextEditingController passwordController =
+        TextEditingController(text: authController.password);
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -102,9 +105,15 @@ class SignInScreen extends StatelessWidget {
                 vertical: Dimensions.paddingSizeDefault,
                 horizontal: Dimensions.paddingSizeLarge,
               ),
-              child: CustomButton(
-                text: 'Log in',
-                onTap: () => Get.offAllNamed(AppRoutes.homeRoute),
+              child: Obx(
+                () => CustomButton(
+                  text: 'Log in',
+                  loading: authController.verifyLoading.value,
+                  onTap: () => authController.signIn(
+                    phoneController.text.trim(),
+                    passwordController.text.trim(),
+                  ),
+                ),
               ),
             ),
           ],

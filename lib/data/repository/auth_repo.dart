@@ -1,40 +1,38 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:smart_ai/data/data_source/local/auth_local_source.dart';
+import 'package:smart_ai/model/user_model.dart';
+import 'package:smart_ai/utils/helpers/format_helpers.dart';
+
+import '../../model/sign_up_model.dart';
+import '../data_source/remote/auth_remote_source.dart';
 
 class AuthRepo {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignIn googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  AuthLocalSource authLocalSource;
+  AuthRemoteSource authRemoteSource;
+
+  AuthRepo({
+    required this.authLocalSource,
+    required this.authRemoteSource,
+  });
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
   int? resendToken;
   String verificationId = '';
-
-  bool get authenticated => _auth.currentUser != null;
-
-  String get userUid => _auth.currentUser?.uid ?? '';
 
   Future verifyPhoneNumber(
     String phoneNumber,
     Function(UserCredential?, String?) onVerificationCompleted, {
     bool resendCode = false,
   }) {
-    return _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+    return auth.verifyPhoneNumber(
+      phoneNumber: FormatHelpers.phoneNumber(phoneNumber),
       timeout: const Duration(seconds: 60),
       forceResendingToken: resendCode ? resendToken : null,
       verificationCompleted: (PhoneAuthCredential credential) async {
         UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
+            await auth.signInWithCredential(credential);
         onVerificationCompleted(userCredential, null);
       },
       verificationFailed: (FirebaseAuthException err) {
@@ -60,72 +58,127 @@ class AuthRepo {
     );
   }
 
+  // Verify otp code sent
   Future<UserCredential> verifyOTP(String otp) {
     if (verificationId.isEmpty) {
-      return Future.error('something_wrong'.tr);
+      debugPrint('>>> Verify otp with verificationId empty');
+      return Future.error('Something went wrong.');
     }
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
-    return _auth.signInWithCredential(credential);
+    return auth.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithAccount(String email, String password) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
-  }
-
-  /// Sign in with google account.
-  Future<UserCredential> signInWithGoogle() async {
-    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    return _auth.signInWithCredential(credential);
-  }
-
-  /// Generates a cryptographically secure random nonce
-  String generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
-  }
-
-  ///Returns the sha256 hash of [input] in hex notation.
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
-
-  Future<UserCredential> signInWithApple() async {
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-    final appleCredential = await SignInWithApple.getAppleIDCredential(scopes: [
-      AppleIDAuthorizationScopes.email,
-      AppleIDAuthorizationScopes.fullName,
-    ], nonce: nonce);
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-    return _auth.signInWithCredential(oauthCredential);
-  }
-
-  Future updateNewPassword(String newPassword) {
-    if (_auth.currentUser == null) {
-      return Future.error('something_wrong'.tr);
+  Future<UserModel> updateNewPassword(String phone, String newPassword) async {
+    try {
+      var userModelResponse =
+          await authRemoteSource.forgotPassword(phone, newPassword);
+      if (userModelResponse.success && userModelResponse.data != null) {
+        await authLocalSource.saveAccessToken(userModelResponse.token);
+        UserModel userModel = userModelResponse.data!;
+        return userModel;
+      }
+      return Future.error(userModelResponse.message);
+    } catch (err) {
+      return Future.error(err);
     }
-    return _auth.currentUser!.updatePassword(newPassword);
+  }
+
+  Future<String> changePassword(
+      String phone, String currentPassword, String newPassword) async {
+    try {
+      var response = await authRemoteSource.changePassword(
+          phone, currentPassword, newPassword);
+      if (response.success) {
+        return response.message;
+      }
+      return Future.error(response.message);
+    } catch (err) {
+      return Future.error(err);
+    }
   }
 
   Future signOut() async {
     verificationId = '';
     resendToken = null;
-    await googleSignIn.signOut();
-    await _auth.signOut();
+    await auth.signOut();
+  }
+
+  void saveRememberMe(bool isRememberMe) {
+    authLocalSource.saveRememberMe(isRememberMe);
+  }
+
+  bool getRememberMe() {
+    return authLocalSource.getRememberMe();
+  }
+
+  Future savePhoneNumberPassword(String phone, String password) async {
+    await authLocalSource.savePhoneNumberPassword(phone, password);
+  }
+
+  String getRememberPhone() {
+    return authLocalSource.getRememberPhone();
+  }
+
+  String getRememberPassword() {
+    return authLocalSource.getRememberPassword();
+  }
+
+  Future<UserModel> signIn(String phone, String password) async {
+    try {
+      var userModelResponse = await authRemoteSource.signIn(phone, password);
+      if (userModelResponse.success && userModelResponse.data != null) {
+        await authLocalSource.saveAccessToken(userModelResponse.token);
+        UserModel userModel = userModelResponse.data!;
+        return userModel;
+      }
+      return Future.error(userModelResponse.message);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  Future<UserModel> signUp(SignUpModel signUpModel) async {
+    try {
+      var userModelResponse = await authRemoteSource.signUp(signUpModel);
+      if (userModelResponse.success && userModelResponse.data != null) {
+        await authLocalSource.saveAccessToken(userModelResponse.token);
+        UserModel userModel = userModelResponse.data!;
+        return userModel;
+      }
+      return Future.error(userModelResponse.message);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  Future<bool> checkPhoneExisted(String phone) async {
+    try {
+      var response = await authRemoteSource.checkPhoneExisted(phone);
+      if (response.success && response.data != null) {
+        return response.data ?? false;
+      }
+      return Future.error(response.message);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  Future<bool> saveUserLocal(UserModel userModel) async {
+    return await authLocalSource.saveUserLocal(userModel);
+  }
+
+  UserModel? getUserLocal() {
+    try {
+      var userModel = authLocalSource.getUserLocal();
+      return userModel;
+    } catch (e) {
+      debugPrint('>>> Get user local: $e');
+      return null;
+    }
+  }
+
+  Future<bool> deleteUserLocal() async {
+    return await authLocalSource.deleteUserLocal();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 
 import '../../../../utils/constants/dimensions.dart';
@@ -10,11 +11,16 @@ class RememberForgotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var authController = Get.find<AuthController>();
     return Row(
       children: [
-        CustomCheckBox(
-          value: true,
-          onChanged: (value) {},
+        Obx(
+          () => CustomCheckBox(
+            value: authController.rememberMe.value,
+            onChanged: (value) {
+              authController.rememberMe.value = value ?? false;
+            },
+          ),
         ),
         const SizedBox(
           width: Dimensions.paddingSizeExtraSmall,

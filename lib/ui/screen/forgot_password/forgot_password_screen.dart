@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_button.dart';
 import 'package:smart_ai/ui/widgets/label_text_field_widget.dart';
@@ -12,6 +13,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController phoneController = TextEditingController();
+    AuthController authController = Get.find<AuthController>();
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SafeArea(
@@ -47,7 +50,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       prefixIcon: CupertinoIcons.phone_fill,
                       label: 'Phone number',
                       hint: 'Phone number',
-                      controller: TextEditingController(),
+                      controller: phoneController,
                     ),
                   ],
                 ),
@@ -58,9 +61,16 @@ class ForgotPasswordScreen extends StatelessWidget {
                 horizontal: Dimensions.paddingSizeLarge,
                 vertical: Dimensions.radiusSizeDefault,
               ),
-              child: CustomButton(
-                text: 'Continue',
-                onTap: () => Get.toNamed(AppRoutes.otpVerificationRoute),
+              child: Obx(
+                () => CustomButton(
+                  text: 'Continue',
+                  loading: authController.verifyLoading.value,
+                  onTap: () => authController.verifyPhone(
+                    phoneController.text,
+                    redirectRoute: AppRoutes.otpVerificationRoute(
+                        AppRoutes.newPasswordRoute),
+                  ),
+                ),
               ),
             )
           ],

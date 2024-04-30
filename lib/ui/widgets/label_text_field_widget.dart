@@ -6,18 +6,28 @@ import 'custom_text_field.dart';
 class LabelTextFieldWidget extends StatelessWidget {
   const LabelTextFieldWidget({
     super.key,
-    required this.prefixIcon,
+    this.prefixIcon,
     required this.label,
     required this.hint,
+    this.initValue = "",
     this.obscureText = false,
+    this.isDateSelected = false,
+    this.focusNode,
     this.controller,
+    this.onTextChanged,
+    this.onTap,
   });
 
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final String label;
   final String hint;
+  final String initValue;
   final bool obscureText;
+  final bool isDateSelected;
+  final FocusNode? focusNode;
   final TextEditingController? controller;
+  final Function(String)? onTextChanged;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +45,19 @@ class LabelTextFieldWidget extends StatelessWidget {
           height: Dimensions.paddingSizeSmall,
         ),
         CustomTextField(
-          prefixIcon: Icon(
-            prefixIcon,
-            size: 18,
-          ),
+          prefixIcon: prefixIcon != null
+              ? Icon(
+                  prefixIcon,
+                  size: 18,
+                )
+              : null,
           hint: hint,
+          onTap: onTap,
+          focusNode: focusNode,
           obscureText: obscureText,
-          controller: controller,
+          controller: controller ?? TextEditingController()
+            ..text = initValue,
+          onChanged: onTextChanged,
         ),
       ],
     );

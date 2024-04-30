@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:teen_match/ui/base/custom_button.dart';
 import 'package:get/get.dart';
-import 'package:teen_match/ui/base/custom_image.dart';
 
-import '../theme/text_theme.dart';
-import '../util/dimensions.dart';
+import '../../ui/widgets/custom_image.dart';
+import '../constants/dimensions.dart';
 
 class DialogHelpers {
   static showMessage(String message,
@@ -28,22 +26,79 @@ class DialogHelpers {
     ));
   }
 
-  static showCustomDialog(BuildContext context, String title,
-      {String description = '',
-      String? imagePath,
-      bool buttonShow = false,
-      String? buttonText,
-      Function()? onPressed}) {
+  static showErrorMessage(String message) {
+    return showMessage(message, error: true);
+  }
+
+  static Future showAlertDialog(
+      BuildContext context, String title, String description,
+      {Function()? onDone, Function()? onCancel}) async {
+    await showAdaptiveDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+            contentTextStyle: Theme.of(context).textTheme.bodyMedium,
+            content: Text(description),
+            actions: [
+              TextButton(
+                style: ButtonStyle(
+                    textStyle: MaterialStatePropertyAll(
+                        Theme.of(context).textTheme.bodyMedium)),
+                onPressed: () {
+                  if (onCancel == null) {
+                    Get.back();
+                  } else {
+                    onCancel();
+                  }
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                    textStyle: MaterialStatePropertyAll(
+                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ))),
+                onPressed: () {
+                  if (onDone == null) {
+                    Get.back();
+                  } else {
+                    onDone();
+                  }
+                },
+                child: const Text('OK'),
+              )
+            ],
+          );
+        });
+  }
+
+  static showCustomDialog(
+    BuildContext context,
+    String title, {
+    String description = '',
+    String? imagePath,
+    Widget? bottomWidget,
+    bool dismissible = true,
+    EdgeInsets? dialogPadding,
+  }) {
     showDialog(
       context: context,
+      barrierDismissible: dismissible,
       builder: (_) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(48),
         ),
-        child: Container(
-          padding: const EdgeInsets.all(
-            Dimensions.paddingSizeExtraLarge + 5,
-          ),
+        child: Padding(
+          padding: dialogPadding ??
+              const EdgeInsets.all(
+                Dimensions.paddingSizeLarge,
+              ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.min,
@@ -51,7 +106,7 @@ class DialogHelpers {
               if (imagePath != null)
                 CustomImage(
                   path: imagePath,
-                  fit: BoxFit.contain,
+                  boxFit: BoxFit.contain,
                   height: 150,
                 ),
               if (imagePath != null)
@@ -62,9 +117,9 @@ class DialogHelpers {
                 children: [
                   Text(
                     title,
-                    style: heading4.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
                   if (description.isNotEmpty)
                     Padding(
@@ -74,19 +129,10 @@ class DialogHelpers {
                       child: Text(
                         description,
                         textAlign: TextAlign.center,
-                        style: bodyLargeRegular,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
-                  if (buttonShow && buttonText != null)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: Dimensions.paddingSizeExtraLarge,
-                      ),
-                      child: CustomButton(
-                        text: buttonText,
-                        onPressed: onPressed,
-                      ),
-                    ),
+                  if (bottomWidget != null) bottomWidget,
                 ],
               ),
             ],
