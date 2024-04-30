@@ -1,0 +1,22 @@
+[
+  {
+    "icon": "assets/icons/ic_app.png",
+    "title": "Accuracy Disclaimer",
+    "description": "SmartAI is may not always provide 100% accurate response."
+  },
+  {
+    "icon": "assets/icons/ic_app.png",
+    "title": "Privacy Reminder",
+    "description": "Avoid sharing sensitive or personal information in your conversations."
+  },
+  {
+    "icon": "assets/icons/ic_app.png",
+    "title": "Chat History Control",
+    "description": "You have the power to manage and delete your chat history within the app."
+  },
+  {
+    "icon": "assets/icons/ic_app.png",
+    "title": "Unlock More",
+    "description": "Explore SmartAI Pro for enhanced features and limitless possibilities."
+  }
+]

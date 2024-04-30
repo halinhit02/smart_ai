@@ -1,0 +1,33 @@
+class MyIcons {
+  static const basePath = 'assets/icons';
+  static const appIcon = '$basePath/ic_app.png';
+  static const add = '$basePath/ic_add.svg';
+  static const voice = '$basePath/ic_voice.svg';
+  static const send = '$basePath/ic_send.svg';
+  static const search = '$basePath/ic_search.svg';
+  static const lock = '$basePath/ic_lock.svg';
+  static const filter = '$basePath/ic_filter.svg';
+  static const star = '$basePath/ic_star.svg';
+  static const chatInactive = '$basePath/ic_chat_inactive.svg';
+  static const chatActive = '$basePath/ic_chat_active.svg';
+  static const assistantsInactive = '$basePath/ic_assistants_inactive.svg';
+  static const assistantsActive = '$basePath/ic_assistants_active.svg';
+  static const historyInactive = '$basePath/ic_history_inactive.svg';
+  static const historyActive = '$basePath/ic_history_active.svg';
+  static const profileInactive = '$basePath/ic_profile_inactive.svg';
+  static const profileActive = '$basePath/ic_profile_active.svg';
+  static const delete = '$basePath/ic_delete.svg';
+  static const arrowLeft = '$basePath/ic_arrow_left.svg';
+  static const personalInfo = '$basePath/ic_personal.svg';
+  static const security = '$basePath/ic_security.svg';
+  static const language = '$basePath/ic_language.svg';
+  static const darkMode = '$basePath/ic_dark_mode.svg';
+  static const helpCenter = '$basePath/ic_help_center.svg';
+  static const privacy = '$basePath/ic_privacy.svg';
+  static const about = '$basePath/ic_about.svg';
+  static const logout = '$basePath/ic_logout.svg';
+  static const google = '$basePath/ic_google.svg';
+  static const apple = '$basePath/ic_apple.svg';
+  static const boldLock = '$basePath/ic_bold_lock.svg';
+  static const boldPhone = '$basePath/ic_bold_phone.svg';
+}
