@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/controller/message_controller.dart';
+import 'package:smart_ai/model/assistant_model.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_button.dart';
 import 'package:smart_ai/ui/widgets/custom_left_message.dart';
@@ -19,12 +21,14 @@ class ChatScreen extends StatefulWidget {
     required this.modelId,
     required this.title,
     this.fromCreate = true,
+    this.assistantId,
   });
 
   final String? id;
   final String modelId;
   final String title;
   final bool fromCreate;
+  final String? assistantId;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -35,14 +39,27 @@ class _ChatScreenState extends State<ChatScreen> {
   var contentController = TextEditingController();
   var scrollController = ScrollController();
   late int chatId;
+  AssistantModel? assistantModel;
+  String? systemContent;
 
   @override
   void initState() {
     super.initState();
     chatId = int.tryParse(widget.id ?? '') ?? -1;
+    if (widget.assistantId != null && widget.assistantId!.isNotEmpty) {
+      assistantModel = Get.find<AssistantController>()
+          .assistantList
+          .firstWhereOrNull(
+              (element) => element.id.toString() == widget.assistantId);
+      if (assistantModel != null) {
+        systemContent =
+            'You are a helpful assistant about ${assistantModel?.title}, designed to ${assistantModel?.description}.';
+      }
+    }
     if (widget.fromCreate) {
       if (chatId != -1) {
-        messageController.createMessage(widget.modelId, widget.title, chatId);
+        messageController.createMessage(widget.modelId, widget.title, chatId,
+            instruction: systemContent);
       }
     } else {
       messageController.getAllMessages(chatId);
@@ -145,7 +162,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                           ?.copyWith(
                                             color: Colors.grey.shade800,
                                           ),
-                                      onTap: () => messageController.cancelGenerating(),
+                                      onTap: () =>
+                                          messageController.cancelGenerating(),
                                     ),
                                   ))
                               : const SizedBox(),
@@ -162,7 +180,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       onTap: () {
                         messageController
                             .createMessage(
-                                widget.modelId, contentController.text, chatId)
+                              widget.modelId,
+                              contentController.text,
+                              chatId,
+                              instruction: systemContent,
+                            )
                             .then((value) => _scrollToEndList());
                         contentController.text = '';
                       },

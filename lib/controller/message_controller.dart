@@ -30,7 +30,7 @@ class MessageController extends GetxController {
     }
   }
 
-  Future createMessage(String modelId, String content, int chatId) async {
+  Future createMessage(String modelId, String content, int chatId, {String? instruction}) async {
     if (modelId.isEmpty) {
       DialogHelpers.showErrorMessage('Cannot fetch model.');
       return;
@@ -47,7 +47,7 @@ class MessageController extends GetxController {
       messageList.add(messageResponse);
       if (modelId.contains('gpt')) {
         Stream<MessageCreateModel> messageStream =
-            messageRepo.createGPTMessage(modelId, messageList);
+            messageRepo.createGPTMessage(modelId, messageList, instruction: instruction);
         messageStreamSub = messageStream.listen((messageModel) async {
           var message = MessageCreateModel(
             content: messageModel.content,

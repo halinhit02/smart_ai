@@ -19,16 +19,19 @@ class AppConfig {
   static const checkPhoneEndpoint = '$authEndpoint/check-phone';
   static const changePasswordEndpoint = '$authEndpoint/change-password';
 
-
   // Remote config
 
-  static const chatModelNameKey = 'chatModelName';
-  static const chatModelsKey = 'chatModels';
+  static const chatModelNameKey = 'chat_model_name';
+  static const chatModelsKey = 'chat_models';
   static const privacyLinkKey = 'privacy_link';
+  static const openAIKey = 'open_ai_key';
+  static const geminiKey = 'gemini_key';
 
   static Map<String, dynamic> defaultParameters = {
-    chatModelNameKey: 'gpt-4; gpt-3.5; gemini-pro',
+    chatModelNameKey: 'GPT-4; GPT-3.5; Gemini-Pro',
     chatModelsKey: 'gpt-4-turbo; gpt-3.5-turbo; gemini-pro',
     privacyLinkKey: 'https://google.com',
+    openAIKey: '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',
+    geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
   };
 }

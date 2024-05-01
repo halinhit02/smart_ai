@@ -32,4 +32,6 @@ class MyIcons {
   static const apple = '$basePath/ic_apple.svg';
   static const boldLock = '$basePath/ic_bold_lock.svg';
   static const boldPhone = '$basePath/ic_bold_phone.svg';
+  static const setting = '$basePath/ic_setting.svg';
+  static const edit = '$basePath/ic_edit.svg';
 }

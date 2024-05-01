@@ -8,6 +8,7 @@ class UserModel {
   String gender;
   DateTime? birthday;
   String address;
+  String? photo;
 
   UserModel({
     this.id = -1,
@@ -17,6 +18,7 @@ class UserModel {
     required this.gender,
     required this.birthday,
     required this.address,
+    this.photo,
   });
 
   UserModel copyWith({
@@ -27,6 +29,7 @@ class UserModel {
     String? gender,
     DateTime? birthday,
     String? address,
+    String? photo,
   }) =>
       UserModel(
         id: id ?? this.id,
@@ -36,8 +39,8 @@ class UserModel {
         gender: gender ?? this.gender,
         birthday: birthday ?? this.birthday,
         address: address ?? this.address,
+        photo: photo ?? this.photo,
       );
-
 
   factory UserModel.fromRawJson(String str) =>
       UserModel.fromJson(json.decode(str));
@@ -54,6 +57,7 @@ class UserModel {
             ? DateTime.tryParse(json["birthday"])?.toLocal()
             : null,
         address: json["address"] ?? '',
+        photo: json["photo"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -64,5 +68,6 @@ class UserModel {
         "gender": gender,
         "birthday": birthday?.toUtc().toIso8601String(),
         "address": address,
+        "photo": photo,
       };
 }

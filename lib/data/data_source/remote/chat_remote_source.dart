@@ -18,11 +18,12 @@ class ChatRemoteSource extends GetConnect {
       }));
   }
 
-  Future<ApiResponseModel<ChatModel>> createChat(
-      String title, String model) async {
+  Future<ApiResponseModel<ChatModel>> createChat(String title, String model,
+      [int? assistantId]) async {
     var response = await post(AppConfig.chatEndpoint, {
       "title": title,
       "model": model,
+      "assistantId": assistantId,
     });
     if (response.body != null) {
       var body = response.body;

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/model/sign_up_model.dart';
@@ -9,7 +11,11 @@ import 'package:smart_ai/ui/widgets/label_text_field_widget.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
+import '../../../utils/constants/images.dart';
+import '../../../utils/constants/my_icons.dart';
+import '../../../utils/helpers/file_helpers.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/custom_image.dart';
 
 class CompleteProfileScreen extends StatelessWidget {
   const CompleteProfileScreen({super.key});
@@ -21,6 +27,8 @@ class CompleteProfileScreen extends StatelessWidget {
     SignUpModel? signUpModel = SignUpModel(
       gender: AppConfig.genders.first,
     );
+    Rx<XFile?> imageFile = Rx(null);
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SafeArea(
@@ -32,7 +40,7 @@ class CompleteProfileScreen extends StatelessWidget {
                 horizontal: Dimensions.paddingSizeLarge,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Complete your profile 📋',
@@ -47,6 +55,47 @@ class CompleteProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: Dimensions.paddingSizeLarge,
+                  ),
+                  Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: Obx(
+                          () => imageFile.value != null
+                              ? CustomImage(
+                                  path: imageFile.value!.path,
+                                  isFilePath: true,
+                                  size: 92,
+                                  isOval: true,
+                                )
+                              : const CustomImage(
+                                  path: Images.defaultPhoto,
+                                  size: 92,
+                                  isOval: true,
+                                  boxShape: BoxShape.circle,
+                                ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: InkWell(
+                            onTap: () async {
+                              var file = await FileHelpers.pickImage();
+                              debugPrint(file?.path);
+                              if (file != null) {
+                                imageFile.value = file;
+                              }
+                            },
+                            child: const CustomImage(
+                              path: MyIcons.edit,
+                              size: 24,
+                            )),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: Dimensions.paddingSizeDefault,
                   ),
                   LabelTextFieldWidget(
                     label: 'Full Name',
@@ -96,11 +145,14 @@ class CompleteProfileScreen extends StatelessWidget {
                   const SizedBox(
                     height: Dimensions.paddingSizeDefault,
                   ),
-                  Text(
-                    'Gender',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Gender',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
                   ),
                   const SizedBox(
                     height: Dimensions.paddingSizeSmall,
@@ -143,7 +195,7 @@ class CompleteProfileScreen extends StatelessWidget {
               () => CustomButton(
                 loading: authController.saveLoading.value,
                 onTap: () {
-                  authController.createUser(signUpModel);
+                  authController.createUser(imageFile.value, signUpModel);
                 },
                 text: 'Save',
               ),

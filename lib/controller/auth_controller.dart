@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:smart_ai/data/repository/auth_repo.dart';
 import 'package:smart_ai/model/sign_up_model.dart';
 import 'package:smart_ai/model/user_model.dart';
+import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 import 'package:smart_ai/utils/helpers/dialog_helpers.dart';
@@ -72,7 +73,8 @@ class AuthController extends GetxController {
       var userModel = await authRepo.signIn(_phoneNumber, password);
       await authRepo.saveUserLocal(userModel);
       // update user model in user controller
-      DialogHelpers.showMessage('Hi ${userModel.fullName}, welcome to my app.');
+      DialogHelpers.showMessage(
+          'Hi ${userModel.fullName}. Welcome to ${AppConstants.appName}.');
       _password = '';
       verifyLoading.value = false;
       Get.offAllNamed(AppRoutes.homeRoute);
@@ -110,7 +112,7 @@ class AuthController extends GetxController {
     );
   }
 
-  Future createUser(SignUpModel signUpModel) async {
+  Future createUser(XFile? photoFile, SignUpModel signUpModel) async {
     try {
       if (!_checkProfileData(signUpModel)) {
         return;
@@ -118,6 +120,11 @@ class AuthController extends GetxController {
       signUpModel.phone = _phoneNumber;
       signUpModel.password = _password;
       saveLoading.value = true;
+      if (photoFile != null) {
+        var photoUrl = await userRepo.uploadFile(photoFile.path,
+            DateTime.now().millisecondsSinceEpoch, photoFile.mimeType);
+        signUpModel.photo = photoUrl;
+      }
       _userModel.value = await authRepo.signUp(signUpModel);
       await authRepo.saveUserLocal(_userModel.value!);
       if (rememberMe.isFalse) {
@@ -136,13 +143,21 @@ class AuthController extends GetxController {
     saveLoading.value = false;
   }
 
-  Future editUser(UserModel userModel) async {
+  Future editUser(XFile? photoFile, UserModel userModel) async {
     try {
       updatingUser.value = true;
+      // Upload file to Cloud storage
+      if (photoFile != null) {
+        var photoUrl = await userRepo.uploadFile(
+            photoFile.path, userModel.id, photoFile.mimeType);
+        debugPrint('>>> photo url: $photoUrl');
+        userModel.photo = photoUrl;
+      }
+      // Edit user to DB
       var editedUser = await userRepo.editUser(userModel);
       _userModel.value = editedUser;
       await authRepo.saveUserLocal(editedUser);
-      await Future.delayed(const Duration(microseconds: 300));
+      Get.back();
       DialogHelpers.showMessage('Update profile successfully.');
     } catch (err) {
       if (kDebugMode) {

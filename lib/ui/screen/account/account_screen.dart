@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/screen/account/widgets/horizontal_title_widget.dart';
 import 'package:smart_ai/ui/screen/account/widgets/menu_profile_item.dart';
@@ -9,6 +10,7 @@ import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
+import 'package:smart_ai/utils/constants/images.dart';
 import 'package:smart_ai/utils/constants/my_icons.dart';
 import 'package:smart_ai/utils/helpers/app_helper.dart';
 
@@ -34,41 +36,40 @@ class AccountScreen extends StatelessWidget {
             const SizedBox(
               height: Dimensions.paddingSizeSmall,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CustomImage(
-                  path:
-                      "https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png?f=webp",
-                  size: 68,
-                  boxFit: BoxFit.fill,
-                ),
-                const SizedBox(
-                  width: Dimensions.paddingSizeDefault,
-                ),
-                Expanded(
-                  child: Obx(() => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            authController.userModel.value?.fullName ??
-                                'SmartAI User',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            authController.userModel.value?.email ?? '',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade700,
-                                ),
-                          ),
-                        ],
-                      )),
-                ),
-              ],
+            Obx(
+              () => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomImage(
+                    path: authController.userModel.value?.photo ??
+                        Images.defaultPhoto,
+                    size: 68,
+                    isOval: true,
+                    boxFit: BoxFit.fill,
+                  ),
+                  const SizedBox(
+                    width: Dimensions.paddingSizeDefault,
+                  ),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        authController.userModel.value?.fullName ??
+                            'SmartAI User',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        authController.userModel.value?.email ?? '',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade700,
+                            ),
+                      ),
+                    ],
+                  )),
+                ],
+              ),
             ),
             const SizedBox(
               height: Dimensions.paddingSizeLarge,
@@ -83,10 +84,6 @@ class AccountScreen extends StatelessWidget {
               iconPath: MyIcons.security,
               title: 'Change Password',
               route: AppRoutes.changePasswordRoute,
-            ),
-            MenuProfileItem(
-              iconPath: MyIcons.security,
-              title: 'Setting',
             ),
             const HorizontalTitleWidget(title: 'About'),
             MenuProfileItem(

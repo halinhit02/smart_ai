@@ -6,8 +6,10 @@ class ChatRepo {
 
   ChatRepo({required this.chatRemoteSource});
 
-  Future<ChatModel> createChat(String title, String model) async {
-    var chatModelResponse = await chatRemoteSource.createChat(title, model);
+  Future<ChatModel> createChat(String title, String model,
+      [int? assistantId]) async {
+    var chatModelResponse =
+        await chatRemoteSource.createChat(title, model, assistantId);
     if (chatModelResponse.success && chatModelResponse.data != null) {
       return chatModelResponse.data!;
     } else {

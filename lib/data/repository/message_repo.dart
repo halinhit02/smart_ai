@@ -20,7 +20,8 @@ class MessageRepo {
   });
 
   Stream<MessageCreateModel> createGPTMessage(
-      String modelId, List<MessageModel> messageList) {
+      String modelId, List<MessageModel> messageList,
+      {String? instruction}) {
     var chatCompleteMessages = messageList
         .where((e) => e.typeMessage.contains(OpenAIChatMessageRole.user.name))
         .map((e) => OpenAIChatCompletionChoiceMessageModel(
@@ -33,6 +34,17 @@ class MessageRepo {
               ],
             ))
         .toList();
+    if (instruction != null && instruction.isNotEmpty) {
+      chatCompleteMessages.insert(
+          0,
+          OpenAIChatCompletionChoiceMessageModel(
+            role: OpenAIChatMessageRole.system,
+            content: [
+              OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                  instruction)
+            ],
+          ));
+    }
     var result = gptRepo
         .createChatCompletionStream(modelId, chatCompleteMessages)
         .delay(const Duration(milliseconds: 500))

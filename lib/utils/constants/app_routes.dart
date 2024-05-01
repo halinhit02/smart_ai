@@ -72,22 +72,21 @@ class AppRoutes {
 
   static String get changePasswordRoute => _changePassword;
 
-
   static String otpVerificationRoute([String? redirectRoute]) =>
       redirectRoute != null
           ? '$_otpVerification?redirect-route=$redirectRoute'
           : _otpVerification;
 
-  static String createAssistantChat(
-          String title, int index) =>
-      '$_createAssistantChat?index=$index&title=$title';
+  static String createAssistantChat(String title, int assistantId) =>
+      '$_createAssistantChat?assistant-id=$assistantId&title=$title';
 
   static String chatRoute(
           {String? id,
           String? message,
           String? modelId,
-          bool fromCreate = true}) =>
-      '$_chat?id=$id&title=$message&model-id=$modelId&from-create=$fromCreate';
+          bool fromCreate = true,
+          int? assistantId}) =>
+      '$_chat?id=$id&title=$message&model-id=$modelId&from-create=$fromCreate&assistant-id=$assistantId';
 
   static String resultImageRoute({int? imageId}) =>
       '$_resultImage?image-id=$imageId';
@@ -121,6 +120,7 @@ class AppRoutes {
         modelId: Get.parameters['model-id'] ?? '',
         title: Get.parameters['title'] ?? '',
         fromCreate: bool.tryParse(Get.parameters['from-create'] ?? 'true')!,
+        assistantId: Get.parameters['assistant-id'],
       ),
     ),
     GetPage(
@@ -130,9 +130,8 @@ class AppRoutes {
     GetPage(
       name: _createAssistantChat,
       page: () => CreateAssistantScreen(
-        title: Get.parameters['title'] ?? 'Unknown',
-        index: int.tryParse(Get.parameters['index'] ?? '-1')!,
-      ),
+          title: Get.parameters['title'] ?? 'Unknown',
+          assistantId: Get.parameters['assistant-id'] ?? '-1'),
     ),
     GetPage(
       name: _historySearch,

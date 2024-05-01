@@ -45,14 +45,18 @@ class ChatController extends GetxController {
     getChatLoading.value = false;
   }
 
-  Future createChat(String initialMessage) async {
+  Future createChat(String initialMessage, [int? assistantId]) async {
     if (initialMessage.isEmpty) {
       DialogHelpers.showErrorMessage('Message not empty.');
       return;
     }
     createLoading.value = true;
     try {
-      var chatModel = await chatRepo.createChat(initialMessage, selectedModel);
+      var chatModel = await chatRepo.createChat(
+        initialMessage,
+        selectedModel,
+        assistantId,
+      );
       createLoading.value = false;
       getAllChat();
       Get.toNamed(AppRoutes.chatRoute(
@@ -60,6 +64,7 @@ class ChatController extends GetxController {
         message: initialMessage,
         modelId: selectedModel,
         fromCreate: true,
+        assistantId: assistantId,
       ));
     } catch (err) {
       if (kDebugMode) {

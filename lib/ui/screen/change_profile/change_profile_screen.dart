@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/model/user_model.dart';
@@ -9,7 +10,12 @@ import 'package:smart_ai/ui/widgets/custom_dropdown.dart';
 import 'package:smart_ai/ui/widgets/label_text_field_widget.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
+import 'package:smart_ai/utils/constants/my_icons.dart';
 import 'package:smart_ai/utils/helpers/dialog_helpers.dart';
+import 'package:smart_ai/utils/helpers/file_helpers.dart';
+
+import '../../../utils/constants/images.dart';
+import '../../widgets/custom_image.dart';
 
 class ChangeProfileScreen extends StatelessWidget {
   const ChangeProfileScreen({super.key});
@@ -19,6 +25,8 @@ class ChangeProfileScreen extends StatelessWidget {
     AuthController authController = Get.find();
     TextEditingController dobController = TextEditingController();
     UserModel? userModel = authController.userModel.value?.copyWith();
+    Rx<XFile?> imageFile = Rx(null);
+
     if (userModel == null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         DialogHelpers.showErrorMessage('Please login in again.');
@@ -38,8 +46,49 @@ class ChangeProfileScreen extends StatelessWidget {
                 horizontal: Dimensions.paddingSizeLarge,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: Dimensions.paddingSizeDefault,
+                  ),
+                  Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: Obx(
+                          () => imageFile.value != null
+                              ? CustomImage(
+                                  path: imageFile.value!.path,
+                                  isFilePath: true,
+                                  size: 92,
+                                  isOval: true,
+                                )
+                              : CustomImage(
+                                  path: userModel.photo ?? Images.defaultPhoto,
+                                  size: 92,
+                                  isOval: true,
+                                  boxShape: BoxShape.circle,
+                                ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: InkWell(
+                            onTap: () async {
+                              var file = await FileHelpers.pickImage();
+                              debugPrint(file?.path);
+                              if (file != null) {
+                                imageFile.value = file;
+                              }
+                            },
+                            child: const CustomImage(
+                              path: MyIcons.edit,
+                              size: 24,
+                            )),
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: Dimensions.paddingSizeLarge,
                   ),
@@ -96,11 +145,14 @@ class ChangeProfileScreen extends StatelessWidget {
                   const SizedBox(
                     height: Dimensions.paddingSizeDefault,
                   ),
-                  Text(
-                    'Gender',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Gender',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
                   ),
                   const SizedBox(
                     height: Dimensions.paddingSizeSmall,
@@ -143,7 +195,8 @@ class ChangeProfileScreen extends StatelessWidget {
             child: Obx(
               () => CustomButton(
                 loading: authController.updatingUser.value,
-                onTap: () => authController.editUser(userModel),
+                onTap: () =>
+                    authController.editUser(imageFile.value, userModel),
                 text: 'Save',
               ),
             ),

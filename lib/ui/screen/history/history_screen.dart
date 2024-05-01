@@ -88,12 +88,14 @@ class HistoryScreen extends StatelessWidget {
                     : ListView.builder(
                         itemCount: chatController.chatList.length,
                         itemBuilder: (itemCtx, index) => GestureDetector(
-                          onTap: () => Get.toNamed(
-                              AppRoutes.chatRoute(
-                                  id: chatController.chatList[index].id.toString(),
-                                  message: chatController.chatList[index].title,
-                                  modelId: chatController.chatList[index].model,
-                                  fromCreate: false)),
+                          onTap: () => Get.toNamed(AppRoutes.chatRoute(
+                            id: chatController.chatList[index].id.toString(),
+                            message: chatController.chatList[index].title,
+                            modelId: chatController.chatList[index].model,
+                            fromCreate: false,
+                            assistantId:
+                                chatController.chatList[index].assistantId,
+                          )),
                           child: HistoryItem(
                             chatModel: chatController.chatList[index],
                           ),

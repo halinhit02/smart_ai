@@ -8,6 +8,7 @@ class SignUpModel {
   String gender;
   DateTime? birthday;
   String address;
+  String? photo;
 
   SignUpModel({
     this.phone = '',
@@ -17,6 +18,7 @@ class SignUpModel {
     this.gender = '',
     this.birthday,
     this.address = '',
+    this.photo,
   });
 
   factory SignUpModel.fromRawJson(String str) =>
@@ -44,5 +46,6 @@ class SignUpModel {
         "gender": gender,
         "birthday": birthday?.toUtc().toIso8601String(),
         "address": address,
+        "photo": photo,
       };
 }

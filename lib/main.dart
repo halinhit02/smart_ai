@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -19,6 +20,7 @@ void main() async {
         ? DefaultFirebaseOptions.ios
         : DefaultFirebaseOptions.android,
   );
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // Setup firebase remote config
   var remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -29,10 +31,6 @@ void main() async {
   remoteConfig.onConfigUpdated.listen((event) async {
     await remoteConfig.activate();
   });
-  // Set OpenAI API key
-  OpenAI.apiKey = "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";
-  // Gemini init
-  Gemini.init(apiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(MyApp(
     sharedPreferences: prefs,
