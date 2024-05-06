@@ -3,7 +3,7 @@ class AppConfig {
   static const genders = ['male', 'female', 'other'];
 
   // APIs
-  static const baseUrl = 'http://localhost:3000/v1';
+  static const baseUrl = 'https://smartai.halinhit.com/v1';
 
   // Endpoints
   static const authEndpoint = '/auth';

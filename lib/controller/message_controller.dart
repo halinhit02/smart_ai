@@ -94,6 +94,12 @@ class MessageController extends GetxController {
   Future cancelGenerating() async {
     await messageStreamSub?.cancel();
     generating.value = false;
+    if (latestMessage.value != null) {
+      var messageResponse =
+      await messageRepo.createMessageRemote(latestMessage.value!);
+      messageList.add(messageResponse);
+      latestMessage.value = null;
+    }
   }
 
   Future<List<GeminiModel>> getListGeminiModel() async {

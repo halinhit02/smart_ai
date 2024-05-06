@@ -22,8 +22,8 @@ class AppBinding extends Bindings {
           sharedPrefs: Get.find(),
         ));
     Get.lazyPut(() => AuthRemoteSource(
-      sharedPrefs: Get.find(),
-    ));
+          sharedPrefs: Get.find(),
+        ));
     Get.lazyPut(() => AuthRepo(
           authLocalSource: Get.find(),
           authRemoteSource: Get.find(),
@@ -31,21 +31,20 @@ class AppBinding extends Bindings {
 
     // User
     Get.lazyPut(() => UserRemoteSource(
-      sharedPrefs: Get.find(),
-    ));
+          sharedPrefs: Get.find(),
+        ));
     Get.lazyPut(() => UserLocalSource(
-      sharedPrefs: Get.find(),
-    ));
+          sharedPrefs: Get.find(),
+        ));
     Get.lazyPut(() => UserRepo(
-      userRemoteSource: Get.find(),
-      userLocalSource: Get.find(),
-    ));
+          userRemoteSource: Get.find(),
+          userLocalSource: Get.find(),
+        ));
 
     Get.put(
       AuthController(
         authRepo: Get.find(),
         userRepo: Get.find(),
-
       ),
     );
   }

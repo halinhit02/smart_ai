@@ -11,6 +11,9 @@ import 'package:smart_ai/data/repository/gemini_repo.dart';
 import 'package:smart_ai/data/repository/gpt_repo.dart';
 import 'package:smart_ai/data/repository/image_repo.dart';
 
+import '../controller/ads_controller.dart';
+import '../data/repository/ads_repo.dart';
+
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
@@ -37,8 +40,14 @@ class HomeBinding extends Bindings {
           assistantRemoteSource: Get.find(),
         ));
 
+    Get.lazyPut(() => AdmobRepo());
+
     Get.put(ChatController(
       chatRepo: Get.find(),
+    ));
+
+    Get.put(AdsController(
+      adsRepo: Get.find(),
     ));
 
     Get.put(ImageController(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/ads_controller.dart';
 import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/ui/widgets/assistant_item.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
@@ -79,6 +80,7 @@ class AssistantAllWidget extends StatelessWidget {
                       itemCount: selectedAssistants.length,
                       itemBuilder: (itemCtx, index) => GestureDetector(
                         onTap: () {
+                          Get.find<AdsController>().showInterstitialAd(() {});
                           Get.toNamed(AppRoutes.createAssistantChat(
                             selectedAssistants[index].title,
                             selectedAssistants[index].id,

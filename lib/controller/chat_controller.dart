@@ -22,6 +22,7 @@ class ChatController extends GetxController {
   List<String> chatModels = [];
   List<String> chatModelName = [];
   RxList<ChatModel> chatList = <ChatModel>[].obs;
+  RxString keyword = ''.obs;
 
   @override
   void onInit() {

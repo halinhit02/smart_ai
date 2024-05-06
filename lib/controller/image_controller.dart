@@ -10,6 +10,8 @@ import 'package:smart_ai/model/image_model.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/helpers/dialog_helpers.dart';
 
+import 'ads_controller.dart';
+
 class ImageController extends GetxController {
   GPTRepo gptRepo;
   ImageRepo imageRepo;
@@ -35,6 +37,7 @@ class ImageController extends GetxController {
       DialogHelpers.showErrorMessage('Description not Empty.');
       return;
     }
+    Get.find<AdsController>().showInterstitialAd(() {});
     imageDescription = description;
     generating.value = true;
     try {

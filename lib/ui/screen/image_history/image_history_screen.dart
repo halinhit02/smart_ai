@@ -46,6 +46,9 @@ class _ImageHistoryScreenState extends State<ImageHistoryScreen> {
               size: 22,
             ),
           ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
         ],
       ),
       body: SafeArea(

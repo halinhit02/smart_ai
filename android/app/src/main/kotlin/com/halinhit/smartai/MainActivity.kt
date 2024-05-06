@@ -1,4 +1,4 @@
-package com.halinhit.smart_ai
+package com.halinhit.smartai
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:smart_ai/controller/ads_controller.dart';
 import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/model/assistant_model.dart';
 import 'package:smart_ai/ui/widgets/assistant_all_widget.dart';
@@ -134,6 +135,8 @@ class _AIAssistantsScreenState extends State<AIAssistantsScreen> {
                               ),
                               itemBuilder: (itemCtx, index) => GestureDetector(
                                 onTap: () {
+                                  Get.find<AdsController>()
+                                      .showInterstitialAd(() {});
                                   Get.toNamed(
                                     AppRoutes.createAssistantChat(
                                       selectedAssistants[index].title,

@@ -5,6 +5,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/binding/app_binding.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
@@ -15,6 +16,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: GetPlatform.isIOS
         ? DefaultFirebaseOptions.ios
@@ -57,6 +59,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       initialBinding: AppBinding(prefs: sharedPreferences),
       getPages: AppRoutes.pages,
       initialRoute: AppRoutes.homeRoute,

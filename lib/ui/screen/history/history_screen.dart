@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_ai/controller/chat_controller.dart';
+import 'package:smart_ai/model/chat_model.dart';
 import 'package:smart_ai/ui/screen/history/widgets/history_item.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_image.dart';
+import 'package:smart_ai/ui/widgets/custom_text_field.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 import 'package:smart_ai/utils/constants/images.dart';
@@ -20,12 +23,6 @@ class HistoryScreen extends StatelessWidget {
       appBar: CustomAppBar(
         title: 'History',
         actions: [
-          IconButton(
-              onPressed: () => Get.toNamed(AppRoutes.historySearchRoute),
-              icon: const CustomImage(
-                path: MyIcons.search,
-                size: 22,
-              )),
           IconButton(
             onPressed: () {
               DialogHelpers.showAlertDialog(context, 'Delete All Chat',
@@ -85,21 +82,50 @@ class HistoryScreen extends StatelessWidget {
                           ),
                         ],
                       )
-                    : ListView.builder(
-                        itemCount: chatController.chatList.length,
-                        itemBuilder: (itemCtx, index) => GestureDetector(
-                          onTap: () => Get.toNamed(AppRoutes.chatRoute(
-                            id: chatController.chatList[index].id.toString(),
-                            message: chatController.chatList[index].title,
-                            modelId: chatController.chatList[index].model,
-                            fromCreate: false,
-                            assistantId:
-                                chatController.chatList[index].assistantId,
-                          )),
-                          child: HistoryItem(
-                            chatModel: chatController.chatList[index],
+                    : ListView(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeSmall,
+                              horizontal: Dimensions.paddingSizeLarge,
+                            ),
+                            child: CustomTextField(
+                              hint: 'Type keyword...',
+                              prefixIcon: const Icon(CupertinoIcons.search),
+                              onChanged: (value) {
+                                chatController.keyword.value = value;
+                              },
+                            ),
                           ),
-                        ),
+                          Obx(() {
+                            List<ChatModel> chatList = chatController.chatList;
+                            if (chatController.keyword.isNotEmpty) {
+                              chatList = chatList
+                                  .where((p0) => p0.title
+                                      .toLowerCase()
+                                      .contains(
+                                          chatController.keyword.toLowerCase()))
+                                  .toList();
+                            }
+                            return ListView.builder(
+                              itemCount: chatList.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (itemCtx, index) => GestureDetector(
+                                onTap: () => Get.toNamed(AppRoutes.chatRoute(
+                                  id: chatList[index].id.toString(),
+                                  message: chatList[index].title,
+                                  modelId: chatList[index].model,
+                                  fromCreate: false,
+                                  assistantId: chatList[index].assistantId,
+                                )),
+                                child: HistoryItem(
+                                  chatModel: chatList[index],
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
                       );
           }),
         ),

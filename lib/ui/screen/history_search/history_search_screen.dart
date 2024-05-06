@@ -15,19 +15,19 @@ class HistorySearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isNotFound = false;
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         forceMaterialTransparency: true,
         titleSpacing: 0,
         titleWidget: Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             right: Dimensions.paddingSizeLarge,
           ),
           child: CustomTextField(
-            prefixIcon: const CustomImage(
+            prefixIcon: CustomImage(
               path: MyIcons.search,
               size: 18,
             ),
-            suffixIcon: const Icon(
+            suffixIcon: Icon(
               CupertinoIcons.clear,
               size: 18,
             ),

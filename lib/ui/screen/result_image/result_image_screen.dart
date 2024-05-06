@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_ai/controller/image_controller.dart';
@@ -35,17 +37,32 @@ class ResultImageScreen extends StatelessWidget {
                           const SizedBox(
                             height: Dimensions.paddingSizeSmall,
                           ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              Dimensions.radiusSizeDefault,
-                            ),
-                            child: CustomImage(
-                              width: Get.width,
-                              path:
+                          GestureDetector(
+                            onTap: () {
+                              final imageProvider = CachedNetworkImageProvider(
                                   imageController.imageModel?.data.first.url ??
                                       imageModel?.imagePath ??
-                                      '',
-                              boxFit: BoxFit.cover,
+                                      '');
+                              showImageViewer(
+                                context,
+                                imageProvider,
+                                swipeDismissible: true,
+                                doubleTapZoomable: true,
+                                useSafeArea: true,
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.radiusSizeDefault,
+                              ),
+                              child: CustomImage(
+                                width: Get.width,
+                                path: imageController
+                                        .imageModel?.data.first.url ??
+                                    imageModel?.imagePath ??
+                                    '',
+                                boxFit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           const SizedBox(
