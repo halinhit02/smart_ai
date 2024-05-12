@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1075672584307-0b55ohl070cagr3u43543d18ln249po4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1075672584307-0b55ohl070cagr3u43543d18ln249po4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1075672584307-aj8vg5g1ambr3ol3ba33v1e0vpmftl14.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDWcct3zHQJ9gYVZHKhKgBYws5qBbSxtiE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1075672584307</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.halinhit.smartai</string>
+	<key>PROJECT_ID</key>
+	<string>smartai-d8cac</string>
+	<key>STORAGE_BUCKET</key>
+	<string>smartai-d8cac.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1075672584307:ios:9964faf90169c8e8eb1a06</string>
+</dict>
+</plist>
