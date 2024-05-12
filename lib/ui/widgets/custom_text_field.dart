@@ -101,6 +101,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+      onTapOutside: (event) => _focus.unfocus(),
       onTap: widget.onTap,
       focusNode: _focus,
       enabled: widget.enable,

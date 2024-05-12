@@ -40,8 +40,9 @@ class ResultImageScreen extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               final imageProvider = CachedNetworkImageProvider(
-                                  imageController.imageModel?.data.first.url ??
-                                      imageModel?.imagePath ??
+                                  imageModel?.imagePath ??
+                                      imageController
+                                          .imageModel?.data.first.url ??
                                       '');
                               showImageViewer(
                                 context,
@@ -57,9 +58,9 @@ class ResultImageScreen extends StatelessWidget {
                               ),
                               child: CustomImage(
                                 width: Get.width,
-                                path: imageController
+                                path: imageModel?.imagePath ??
+                                    imageController
                                         .imageModel?.data.first.url ??
-                                    imageModel?.imagePath ??
                                     '',
                                 boxFit: BoxFit.cover,
                               ),
@@ -81,9 +82,9 @@ class ResultImageScreen extends StatelessWidget {
                             height: Dimensions.paddingSizeSmall,
                           ),
                           Text(
-                            imageController
+                            imageModel?.content ??
+                                imageController
                                     .imageModel?.data.first.revisedPrompt ??
-                                imageModel?.content ??
                                 imageController.imageDescription ??
                                 '',
                           ),
@@ -101,8 +102,8 @@ class ResultImageScreen extends StatelessWidget {
                         text: 'Save',
                         loading: imageController.saving.isTrue,
                         onTap: () => imageController.saveImage(
-                            imageController.imageModel?.data.first.url ??
-                                imageModel?.imagePath ??
+                            imageModel?.imagePath ??
+                                imageController.imageModel?.data.first.url ??
                                 ''),
                       ),
                     ),
