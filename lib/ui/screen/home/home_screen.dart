@@ -160,16 +160,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            GetBuilder<AdsController>(builder: (adsController) {
-              return adsController.bannerAd != null
-                  ? Container(
-                      alignment: Alignment.center,
-                      width: adsController.bannerAd!.size.width.toDouble(),
-                      height: adsController.bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: adsController.bannerAd!),
-                    )
-                  : const SizedBox();
-            }),
+            // GetBuilder<AdsController>(builder: (adsController) {
+            //   return adsController.bannerAd != null
+            //       ? Container(
+            //           alignment: Alignment.center,
+            //           width: adsController.bannerAd!.size.width.toDouble(),
+            //           height: adsController.bannerAd!.size.height.toDouble(),
+            //           child: AdWidget(ad: adsController.bannerAd!),
+            //         )
+            //       : const SizedBox();
+            // }),
           ],
         ));
   }
