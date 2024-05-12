@@ -1,6 +1,6 @@
 class Images {
   static const basePath = 'assets/images';
-  static const intelligence = '$basePath/intelligence.svg';
+  static const intelligence = '$basePath/intelligence.png';
   static const empty = '$basePath/empty.svg';
   static const notFound = '$basePath/not_found.svg';
   static const starUpgrade = '$basePath/star_upgrade.svg';

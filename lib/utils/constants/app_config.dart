@@ -20,12 +20,12 @@ class AppConfig {
   static const changePasswordEndpoint = '$authEndpoint/change-password';
 
   // Remote config
-
   static const chatModelNameKey = 'chat_model_name';
   static const chatModelsKey = 'chat_models';
   static const privacyLinkKey = 'privacy_link';
   static const openAIKey = 'open_ai_key';
   static const geminiKey = 'gemini_key';
+  static const allowImageGenerationKey = 'allow_image_generation';
 
   static Map<String, dynamic> defaultParameters = {
     chatModelNameKey: 'GPT-4; GPT-3.5; Gemini-Pro',
@@ -33,5 +33,6 @@ class AppConfig {
     privacyLinkKey: 'https://google.com',
     openAIKey: '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',
     geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
+    allowImageGenerationKey: true,
   };
 }

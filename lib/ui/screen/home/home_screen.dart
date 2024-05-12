@@ -1,7 +1,6 @@
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get/get.dart';
@@ -24,19 +23,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var remoteConfig = FirebaseRemoteConfig.instance;
   int pageIndex = 0;
+  bool showImageGeneration = false;
 
   @override
   void initState() {
     super.initState();
     // Set OpenAI API key
-    OpenAI.apiKey =
-        FirebaseRemoteConfig.instance.getString(AppConfig.openAIKey);
+    OpenAI.apiKey = remoteConfig.getString(AppConfig.openAIKey);
     // Gemini init
-    Gemini.init(
-        apiKey: FirebaseRemoteConfig.instance.getString(AppConfig.geminiKey));
+    Gemini.init(apiKey: remoteConfig.getString(AppConfig.geminiKey));
     WidgetsFlutterBinding.ensureInitialized()
         .addPostFrameCallback((_) => initPlugin());
+    showImageGeneration =
+        remoteConfig.getBool(AppConfig.allowImageGenerationKey);
   }
 
   Future initPlugin() async {
@@ -109,17 +110,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 22,
                 ),
                 label: 'AI Assistants'),
-            BottomNavigationBarItem(
-                icon: const CustomImage(
-                  path: MyIcons.imageInactive,
-                  size: 22,
-                ),
-                activeIcon: CustomImage(
-                  path: MyIcons.imageActive,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 22,
-                ),
-                label: 'AI Image'),
+            if (showImageGeneration)
+              BottomNavigationBarItem(
+                  icon: const CustomImage(
+                    path: MyIcons.imageInactive,
+                    size: 22,
+                  ),
+                  activeIcon: CustomImage(
+                    path: MyIcons.imageActive,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 22,
+                  ),
+                  label: 'AI Image'),
             BottomNavigationBarItem(
                 icon: const CustomImage(
                   path: MyIcons.historyInactive,
@@ -149,12 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: IndexedStack(
                 index: pageIndex,
-                children: const [
-                  StartChatScreen(),
-                  AIAssistantsScreen(),
-                  AIImageScreen(),
-                  HistoryScreen(),
-                  AccountScreen(),
+                children: [
+                  const StartChatScreen(),
+                  const AIAssistantsScreen(),
+                  if (showImageGeneration) const AIImageScreen(),
+                  const HistoryScreen(),
+                  const AccountScreen(),
                 ],
               ),
             ),

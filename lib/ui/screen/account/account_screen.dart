@@ -1,7 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/screen/account/widgets/horizontal_title_widget.dart';
 import 'package:smart_ai/ui/screen/account/widgets/menu_profile_item.dart';
@@ -13,6 +12,7 @@ import 'package:smart_ai/utils/constants/dimensions.dart';
 import 'package:smart_ai/utils/constants/images.dart';
 import 'package:smart_ai/utils/constants/my_icons.dart';
 import 'package:smart_ai/utils/helpers/app_helper.dart';
+import 'package:smart_ai/utils/helpers/dialog_helpers.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -84,6 +84,21 @@ class AccountScreen extends StatelessWidget {
               iconPath: MyIcons.security,
               title: 'Change Password',
               route: AppRoutes.changePasswordRoute,
+            ),
+            MenuProfileItem(
+              iconPath: MyIcons.delete,
+              title: 'Delete Account',
+              onTap: () {
+                DialogHelpers.showAlertDialog(
+                    context,
+                    'Delete Account',
+                    'Are you sure you want to delete your account? '
+                        'All data and related information will be permanently deleted and cannot be recovered.',
+                    onDone: () {
+                  DialogHelpers.showMessage('Your account is deleted.');
+                  authController.signOut();
+                });
+              },
             ),
             const HorizontalTitleWidget(title: 'About'),
             MenuProfileItem(

@@ -71,7 +71,7 @@ class ImageController extends GetxController {
       if (kDebugMode) {
         debugPrint('>>> Generate Image error: $e');
       }
-      DialogHelpers.showErrorMessage('Something went wrong.');
+      DialogHelpers.showErrorMessage('Something went wrong. $e');
     }
     generating.value = false;
   }
