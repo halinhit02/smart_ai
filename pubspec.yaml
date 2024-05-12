@@ -65,7 +65,7 @@ dependencies:
   # Shared Preferences:
   shared_preferences:
 
-  flutter_markdown: ^0.6.20
+  flutter_markdown: ^0.7.1
   rxdart: ^0.27.7
   image_gallery_saver: ^2.0.3
   dio:
@@ -75,8 +75,8 @@ dependencies:
   url_launcher:
   image_picker:
   easy_image_viewer: ^1.5.0
-  google_mobile_ads:
-  app_tracking_transparency:
+  google_mobile_ads: ^5.0.0
+  app_tracking_transparency: ^2.0.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -94,7 +94,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
