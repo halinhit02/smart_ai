@@ -1,6 +1,5 @@
 flutter_launcher_icons:
-  android: "ic_launcher"
+  android: false
   ios: true
-  image_path: "icon_app.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  image_path: "icon_app_color.png"
   remove_alpha_ios: true
