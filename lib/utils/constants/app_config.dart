@@ -26,6 +26,7 @@ class AppConfig {
   static const openAIKey = 'open_ai_key';
   static const geminiKey = 'gemini_key';
   static const allowImageGenerationKey = 'allow_image_generation';
+  static const allowSignIn = 'allow_sign_in';
 
   static Map<String, dynamic> defaultParameters = {
     chatModelNameKey: 'GPT-4; GPT-3.5; Gemini-Pro',
@@ -34,5 +35,6 @@ class AppConfig {
     openAIKey: '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',
     geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
     allowImageGenerationKey: true,
+    allowSignIn: false,
   };
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:smart_ai/data/repository/auth_repo.dart';
 import 'package:smart_ai/model/sign_up_model.dart';
 import 'package:smart_ai/model/user_model.dart';
+import 'package:smart_ai/utils/constants/app_config.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
@@ -45,6 +47,9 @@ class AuthController extends GetxController {
 
   User? get currentUser => authRepo.auth.currentUser;
 
+  bool get allowSignIn =>
+      FirebaseRemoteConfig.instance.getBool(AppConfig.allowSignIn);
+
   @override
   void onInit() {
     super.onInit();
@@ -54,7 +59,29 @@ class AuthController extends GetxController {
   }
 
   void getUserLocal() {
-    _userModel.value = authRepo.getUserLocal();
+    if (!allowSignIn) {
+      _userModel.value = UserModel.fromJson({
+        "id": 3,
+        "phone": "0987654321",
+        "fullName": "Tuan Ng",
+        "email": "tuanng@gmail.com",
+        "gender": "male",
+        "birthday": "2024-05-21T00:00:00.000Z",
+        "address": "Vietnam",
+        "photo": null,
+        "createdAt": "2024-05-05T22:41:05.412Z",
+        "updatedAt": null
+      });
+      authRepo.authLocalSource.saveAccessToken(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsImlhdCI6MTcxNTk4MDI4OCwiZXhwIjoxNzE4NTcyMjg4fQ.V_Z_G5a4CrWIwybr_Rya05tb7LU9gINtAPeAbbrKmAo');
+    } else {
+      _userModel.value = authRepo.getUserLocal();
+      if (_userModel.value != null) {
+        if (_userModel.value!.phone.contains('0987654321')) {
+          _userModel.value = null;
+        }
+      }
+    }
   }
 
   Future signIn(String phone, String password) async {

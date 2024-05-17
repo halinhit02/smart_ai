@@ -133,17 +133,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 label: 'History'),
-            BottomNavigationBarItem(
-                icon: const CustomImage(
-                  path: MyIcons.profileInactive,
-                  size: 22,
-                ),
-                activeIcon: CustomImage(
-                  path: MyIcons.profileActive,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 22,
-                ),
-                label: 'Account'),
+            if (remoteConfig.getBool(AppConfig.allowSignIn))
+              BottomNavigationBarItem(
+                  icon: const CustomImage(
+                    path: MyIcons.profileInactive,
+                    size: 22,
+                  ),
+                  activeIcon: CustomImage(
+                    path: MyIcons.profileActive,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 22,
+                  ),
+                  label: 'Account'),
           ],
         ),
         body: Column(
@@ -156,7 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const AIAssistantsScreen(),
                   if (showImageGeneration) const AIImageScreen(),
                   const HistoryScreen(),
-                  const AccountScreen(),
+                  if (remoteConfig.getBool(AppConfig.allowSignIn))
+                    const AccountScreen(),
                 ],
               ),
             ),
