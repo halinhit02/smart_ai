@@ -18,6 +18,7 @@ import 'package:smart_ai/ui/screen/otp_verification/opt_verification_screen.dart
 import 'package:smart_ai/ui/screen/result_image/result_image_screen.dart';
 import 'package:smart_ai/ui/screen/sign_in/sign_in_screen.dart';
 import 'package:smart_ai/ui/screen/sign_up/sign_up_screen.dart';
+import 'package:smart_ai/ui/screen/upgrade_plan/upgrade_plan_screen.dart';
 import 'package:smart_ai/ui/screen/welcome/welcome_screen.dart';
 
 import '../../ui/screen/change_profile/change_profile_screen.dart';
@@ -42,6 +43,7 @@ class AppRoutes {
   static const _imageHistory = '/image-history';
   static const _changeProfile = '/change-profile';
   static const _changePassword = '/change-password';
+  static const _upgradePlan = '/upgrade-plan';
 
   // route
   static String get welcomeRoute => _welcome;
@@ -71,6 +73,8 @@ class AppRoutes {
   static String get changeProfileRoute => _changeProfile;
 
   static String get changePasswordRoute => _changePassword;
+
+  static String get upgradePlan => _upgradePlan;
 
   static String otpVerificationRoute([String? redirectRoute]) =>
       redirectRoute != null
@@ -180,6 +184,10 @@ class AppRoutes {
     GetPage(
       name: _changePassword,
       page: () => const ChangePasswordScreen(),
+    ),
+    GetPage(
+      name: _upgradePlan,
+      page: () => const UpgradePlanScreen(),
     ),
   ];
 }

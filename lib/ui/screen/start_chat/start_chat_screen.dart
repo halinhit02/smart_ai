@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/app_routes.dart';
+import 'package:smart_ai/utils/constants/my_icons.dart';
 
 import '../../../utils/constants/dimensions.dart';
 import '../../../utils/constants/images.dart';
@@ -15,8 +16,19 @@ class StartChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: AppConstants.appName,
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.upgradePlan),
+            icon: const CustomImage(
+              path: MyIcons.vip,
+            ),
+          ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
