@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/ads_controller.dart';
 import 'package:smart_ai/controller/chat_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_dropdown.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
@@ -116,6 +117,7 @@ class CreateChatScreen extends StatelessWidget {
                     controller: messageController,
                     loading: chatController.createLoading.value,
                     onTap: () {
+                      Get.find<AdsController>().showInterstitialAd(forceShow: true);
                       chatController
                           .createChat(messageController.text)
                           .then((value) => messageController.clear());

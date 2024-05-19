@@ -37,7 +37,7 @@ class ImageController extends GetxController {
       DialogHelpers.showErrorMessage('Description not Empty.');
       return;
     }
-    Get.find<AdsController>().showInterstitialAd(() {});
+    Get.find<AdsController>().showInterstitialAd(forceShow: true);
     imageDescription = description;
     generating.value = true;
     try {

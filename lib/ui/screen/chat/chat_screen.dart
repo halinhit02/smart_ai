@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/ads_controller.dart';
 import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/controller/message_controller.dart';
 import 'package:smart_ai/model/assistant_model.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_button.dart';
+import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/ui/widgets/custom_left_message.dart';
 
 import 'package:smart_ai/ui/widgets/custom_right_message.dart';
+import 'package:smart_ai/utils/constants/app_routes.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
+import 'package:smart_ai/utils/constants/my_icons.dart';
 
 import '../../widgets/message_field_widget.dart';
 
@@ -67,11 +72,17 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _scrollToEndList() {
-    scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
+    try {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 1),
+        curve: Curves.fastOutSlowIn,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Chat screen, scroll to end list: $e');
+      }
+    }
   }
 
   @override
@@ -93,6 +104,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         Obx(() {
                           SchedulerBinding.instance.addPostFrameCallback(
                               (timeStamp) => _scrollToEndList());
+                          if (!widget.fromCreate &&
+                              messageController.messageList.isEmpty) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
                           return ListView.builder(
                               itemCount:
                                   messageController.messageList.length + 1,
@@ -178,6 +195,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: MessageFieldWidget(
                       controller: contentController,
                       onTap: () {
+                        bool forceShowAds =
+                            widget.modelId.toLowerCase().contains('gpt-4');
+                        Get.find<AdsController>().showInterstitialAd(
+                          forceShow: forceShowAds,
+                        );
                         messageController
                             .createMessage(
                               widget.modelId,
