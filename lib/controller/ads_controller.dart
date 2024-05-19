@@ -67,7 +67,17 @@ class AdsController extends GetxController {
     }));
   }
 
-  showInterstitialAd(Function onFinish) {
+  showInterstitialAd({Function? onFinish, bool forceShow = false}) {
+    if (forceShow) {
+      if (_interstitialAd != null) {
+        _interstitialAd
+            ?.show()
+            .then((value) => onFinish != null ? onFinish() : () {});
+      } else if (onFinish != null) {
+        onFinish();
+      }
+      return;
+    }
     var now = DateTime.now().millisecondsSinceEpoch;
     if (now - _latestTimeShowed < 30 * 1000) {
       return;
@@ -75,8 +85,10 @@ class AdsController extends GetxController {
       _latestTimeShowed = now;
     }
     if (_interstitialAd != null) {
-      _interstitialAd?.show().then((value) => onFinish());
-    } else {
+      _interstitialAd
+          ?.show()
+          .then((value) => onFinish != null ? onFinish() : () {});
+    } else if (onFinish != null) {
       onFinish();
     }
   }

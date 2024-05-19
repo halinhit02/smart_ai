@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
+import 'package:smart_ai/controller/purchase_controller.dart';
 import 'package:smart_ai/data/data_source/local/auth_local_source.dart';
 import 'package:smart_ai/data/data_source/local/user_local_source.dart';
 import 'package:smart_ai/data/data_source/remote/auth_remote_source.dart';
 import 'package:smart_ai/data/data_source/remote/user_remote_source.dart';
 import 'package:smart_ai/data/repository/auth_repo.dart';
+import 'package:smart_ai/data/repository/purchase_repo.dart';
 import 'package:smart_ai/data/repository/user_repo.dart';
 
 class AppBinding extends Bindings {
@@ -41,11 +43,18 @@ class AppBinding extends Bindings {
           userLocalSource: Get.find(),
         ));
 
+    // Purchase
+    Get.lazyPut(() => PurchaseRepo());
+
     Get.put(
       AuthController(
         authRepo: Get.find(),
         userRepo: Get.find(),
       ),
     );
+
+    Get.put(PurchaseController(
+      purchaseRepo: Get.find(),
+    ));
   }
 }

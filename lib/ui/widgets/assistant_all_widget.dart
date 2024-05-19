@@ -80,7 +80,7 @@ class AssistantAllWidget extends StatelessWidget {
                       itemCount: selectedAssistants.length,
                       itemBuilder: (itemCtx, index) => GestureDetector(
                         onTap: () {
-                          Get.find<AdsController>().showInterstitialAd(() {});
+                          Get.find<AdsController>().showInterstitialAd();
                           Get.toNamed(AppRoutes.createAssistantChat(
                             selectedAssistants[index].title,
                             selectedAssistants[index].id,
