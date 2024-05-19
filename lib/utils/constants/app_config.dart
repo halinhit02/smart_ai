@@ -35,6 +35,6 @@ class AppConfig {
     openAIKey: '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',
     geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
     allowImageGenerationKey: true,
-    allowSignIn: false,
+    allowSignIn: true,
   };
 }

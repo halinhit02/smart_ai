@@ -90,6 +90,17 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: widget.title,
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.upgradePlan),
+            icon: const CustomImage(
+              path: MyIcons.vip,
+            ),
+          ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
+        ],
       ),
       body: chatId == -1
           ? const Center(
