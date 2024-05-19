@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:smart_ai/controller/auth_controller.dart';
 import 'package:smart_ai/ui/screen/account/widgets/horizontal_title_widget.dart';
 import 'package:smart_ai/ui/screen/account/widgets/menu_profile_item.dart';
+import 'package:smart_ai/ui/screen/account/widgets/upgrade_widget.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
 import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
@@ -71,9 +72,7 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
-              height: Dimensions.paddingSizeLarge,
-            ),
+            const UpgradeWidget(),
             const HorizontalTitleWidget(title: 'General'),
             MenuProfileItem(
               iconPath: MyIcons.personalInfo,

@@ -36,6 +36,9 @@ class HistoryScreen extends StatelessWidget {
               size: 22,
             ),
           ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
         ],
       ),
       body: SafeArea(

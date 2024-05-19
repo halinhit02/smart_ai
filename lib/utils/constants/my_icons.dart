@@ -34,4 +34,6 @@ class MyIcons {
   static const boldPhone = '$basePath/ic_bold_phone.svg';
   static const setting = '$basePath/ic_setting.svg';
   static const edit = '$basePath/ic_edit.svg';
+  static const tickSquare = '$basePath/ic_check.svg';
+  static const vip = '$basePath/ic_vip.png';
 }

@@ -53,6 +53,29 @@ class AppConstants {
     'Others',
   ];
 
+  static const freeDescription = [
+    'Ad-supported experience',
+    'Access to limited chatbot features',
+    'Limit image generation',
+    'Limit image history storage',
+    'Limited chat history storage'
+  ];
+  static const planDescription = [
+    'Ad-free experience',
+    'Full access to all chatbot features',
+    'Priority customer support',
+    'AI-powered conversation insights',
+    'Unlimited chat history storage',
+    'Unlimited image history storage',
+  ];
+
+  static const productIds = [
+    'smartai_month',
+    'smartai_three_months',
+    'smartai_six_monthss',
+    'smartai_year',
+  ];
+
   static var assistants = [
     {
       'id': 1,

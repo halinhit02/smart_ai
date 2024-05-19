@@ -7,8 +7,10 @@ import 'package:smart_ai/model/assistant_model.dart';
 import 'package:smart_ai/ui/widgets/assistant_all_widget.dart';
 import 'package:smart_ai/ui/widgets/assistant_item.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
+import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
+import 'package:smart_ai/utils/constants/my_icons.dart';
 
 import '../../../utils/constants/app_routes.dart';
 
@@ -33,8 +35,19 @@ class _AIAssistantsScreenState extends State<AIAssistantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'AI Assistants',
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.upgradePlan),
+            icon: const CustomImage(
+              path: MyIcons.vip,
+            ),
+          ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
+        ],
       ),
       body: Obx(
         () {
@@ -136,7 +149,7 @@ class _AIAssistantsScreenState extends State<AIAssistantsScreen> {
                               itemBuilder: (itemCtx, index) => GestureDetector(
                                 onTap: () {
                                   Get.find<AdsController>()
-                                      .showInterstitialAd(() {});
+                                      .showInterstitialAd();
                                   Get.toNamed(
                                     AppRoutes.createAssistantChat(
                                       selectedAssistants[index].title,
