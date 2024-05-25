@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:smart_ai/controller/purchase_controller.dart';
 import 'package:smart_ai/data/repository/ads_repo.dart';
 
 class AdsController extends GetxController {
@@ -68,6 +69,12 @@ class AdsController extends GetxController {
   }
 
   showInterstitialAd({Function? onFinish, bool forceShow = false}) {
+    if (Get.find<PurchaseController>().isPremium) {
+      if (onFinish != null) {
+        onFinish();
+      }
+      return;
+    }
     if (forceShow) {
       if (_interstitialAd != null) {
         _interstitialAd

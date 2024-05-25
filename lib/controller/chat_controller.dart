@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/purchase_controller.dart';
 import 'package:smart_ai/data/repository/chat_repo.dart';
 import 'package:smart_ai/model/chat_model.dart';
 import 'package:smart_ai/utils/constants/app_config.dart';
@@ -50,6 +51,17 @@ class ChatController extends GetxController {
     if (initialMessage.isEmpty) {
       DialogHelpers.showErrorMessage('Message not empty.');
       return;
+    }
+    if (selectedModel.toLowerCase().contains('gpt-4')) {
+      var chatPremiumCount = chatList
+          .where((p0) => p0.model.toLowerCase().contains('gpt-4'))
+          .length;
+      if (!Get.find<PurchaseController>().isPremium && chatPremiumCount >= 3) {
+        DialogHelpers.showErrorMessage(
+            'You have reached the limit of GPT-4 chat. To continue, upgrade to PRO!');
+        Get.toNamed(AppRoutes.upgradePlan);
+        return;
+      }
     }
     createLoading.value = true;
     try {

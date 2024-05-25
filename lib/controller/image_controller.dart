@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:smart_ai/controller/purchase_controller.dart';
 import 'package:smart_ai/data/repository/gpt_repo.dart';
 import 'package:smart_ai/data/repository/image_repo.dart';
 import 'package:smart_ai/model/image_create_model.dart';
@@ -33,6 +34,12 @@ class ImageController extends GetxController {
   String? imageDescription;
 
   Future generateImage(String description) async {
+    if (!Get.find<PurchaseController>().isPremium && imageList.length >= 3) {
+      DialogHelpers.showErrorMessage(
+          'You have reached the limit of image generation. To continue, upgrade to PRO!');
+      Get.toNamed(AppRoutes.upgradePlan);
+      return;
+    }
     if (description.isEmpty) {
       DialogHelpers.showErrorMessage('Description not Empty.');
       return;

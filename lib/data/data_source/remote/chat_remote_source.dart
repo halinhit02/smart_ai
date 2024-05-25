@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/model/chat_model.dart';
@@ -10,7 +11,7 @@ class ChatRemoteSource extends GetConnect {
   SharedPreferences sharedPrefs;
 
   ChatRemoteSource({required this.sharedPrefs}) {
-    httpClient.baseUrl = AppConfig.baseUrl;
+    httpClient.baseUrl = FirebaseRemoteConfig.instance.getString(AppConfig.baseUrlKey);
     httpClient.addRequestModifier<Object?>((request) => request
       ..headers.addAll({
         'Authorization':

@@ -4,8 +4,10 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:smart_ai/controller/ads_controller.dart';
+import 'package:smart_ai/controller/purchase_controller.dart';
 import 'package:smart_ai/ui/screen/account/account_screen.dart';
 import 'package:smart_ai/ui/screen/ai_assistants/ai_assistants_screen.dart';
 import 'package:smart_ai/ui/screen/ai_image/ai_image_screen.dart';
@@ -24,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var remoteConfig = FirebaseRemoteConfig.instance;
+  var purchaseController = Get.find<PurchaseController>();
   int pageIndex = 0;
   bool showImageGeneration = false;
 
@@ -162,16 +165,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            GetBuilder<AdsController>(builder: (adsController) {
-              return adsController.bannerAd != null
-                  ? Container(
-                      alignment: Alignment.center,
-                      width: adsController.bannerAd!.size.width.toDouble(),
-                      height: adsController.bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: adsController.bannerAd!),
-                    )
-                  : const SizedBox();
-            }),
+            Obx(
+              () => !purchaseController.purchasing.isTrue &&
+                      !purchaseController.isPremium
+                  ? GetBuilder<AdsController>(builder: (adsController) {
+                      return adsController.bannerAd != null
+                          ? Container(
+                              alignment: Alignment.center,
+                              width:
+                                  adsController.bannerAd!.size.width.toDouble(),
+                              height: adsController.bannerAd!.size.height
+                                  .toDouble(),
+                              child: AdWidget(ad: adsController.bannerAd!),
+                            )
+                          : const SizedBox();
+                    })
+                  : const SizedBox(),
+            ),
           ],
         ));
   }

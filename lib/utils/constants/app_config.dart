@@ -2,9 +2,6 @@ class AppConfig {
   static const genderName = ['Male', 'Female', 'Other'];
   static const genders = ['male', 'female', 'other'];
 
-  // APIs
-  static const baseUrl = 'https://smartai.halinhit.com/v1';
-
   // Endpoints
   static const authEndpoint = '/auth';
   static const userEndpoint = '/user';
@@ -27,6 +24,7 @@ class AppConfig {
   static const geminiKey = 'gemini_key';
   static const allowImageGenerationKey = 'allow_image_generation';
   static const allowSignIn = 'allow_sign_in';
+  static const baseUrlKey = 'base_url';
 
   static Map<String, dynamic> defaultParameters = {
     chatModelNameKey: 'GPT-4; GPT-3.5; Gemini-Pro',
@@ -34,6 +32,7 @@ class AppConfig {
     privacyLinkKey: 'https://google.com',
     openAIKey: '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',
     geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
+    baseUrlKey: 'https://smartai.halinhit.com/v1',
     allowImageGenerationKey: true,
     allowSignIn: true,
   };

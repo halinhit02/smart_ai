@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/model/api_response_model.dart';
@@ -10,7 +11,7 @@ class AssistantRemoteSource extends GetConnect {
   SharedPreferences sharedPrefs;
 
   AssistantRemoteSource({required this.sharedPrefs}) {
-    httpClient.baseUrl = AppConfig.baseUrl;
+    httpClient.baseUrl = FirebaseRemoteConfig.instance.getString(AppConfig.baseUrlKey);
     httpClient.addRequestModifier<Object?>((request) => request
       ..headers.addAll({
         'Authorization':

@@ -13,6 +13,8 @@ class PlanItem extends StatelessWidget {
     required this.descriptionList,
     this.currentPlan = false,
     this.mostPopular = false,
+    this.freePlan = false,
+    this.purchasing = false,
     this.onSelectPlan,
   });
 
@@ -22,6 +24,8 @@ class PlanItem extends StatelessWidget {
   final List<String> descriptionList;
   final bool currentPlan;
   final bool mostPopular;
+  final bool freePlan;
+  final bool purchasing;
   final Function()? onSelectPlan;
 
   @override
@@ -94,7 +98,7 @@ class PlanItem extends StatelessWidget {
                   ),
                 ),
               ),
-              if (!currentPlan)
+              if (!currentPlan && !freePlan)
                 Column(
                   children: [
                     Padding(
@@ -110,6 +114,7 @@ class PlanItem extends StatelessWidget {
                       text: 'Select plan',
                       color: Theme.of(context).colorScheme.primary,
                       onTap: onSelectPlan,
+                      loading: purchasing,
                       textStyle:
                           Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w700,

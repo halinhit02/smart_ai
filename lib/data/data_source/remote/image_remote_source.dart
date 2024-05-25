@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/model/image_create_model.dart';
@@ -12,7 +13,7 @@ class ImageRemoteSource extends GetConnect {
   SharedPreferences sharedPrefs;
 
   ImageRemoteSource({required this.sharedPrefs}) {
-    httpClient.baseUrl = AppConfig.baseUrl;
+    httpClient.baseUrl = FirebaseRemoteConfig.instance.getString(AppConfig.baseUrlKey);
     httpClient.addRequestModifier<Object?>((request) =>
     request
       ..headers.addAll({

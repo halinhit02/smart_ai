@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_ai/model/api_response_model.dart';
@@ -9,7 +10,7 @@ class AuthRemoteSource extends GetConnect {
   SharedPreferences sharedPrefs;
 
   AuthRemoteSource({required this.sharedPrefs}) {
-    httpClient.baseUrl = AppConfig.baseUrl;
+    httpClient.baseUrl = FirebaseRemoteConfig.instance.getString(AppConfig.baseUrlKey);
   }
 
   Future<ApiResponseModel<UserModel>> signUp(SignUpModel signUpModel) async {

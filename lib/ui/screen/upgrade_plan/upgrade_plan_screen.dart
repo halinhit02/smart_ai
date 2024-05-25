@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_ai/controller/purchase_controller.dart';
-import 'package:smart_ai/ui/screen/upgrade_plan/widgets/description_item.dart';
 import 'package:smart_ai/ui/screen/upgrade_plan/widgets/plan_item.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
-import 'package:smart_ai/ui/widgets/custom_button.dart';
-import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
-import 'package:smart_ai/utils/constants/my_icons.dart';
+import 'package:smart_ai/utils/helpers/dialog_helpers.dart';
 
 class UpgradePlanScreen extends StatelessWidget {
   const UpgradePlanScreen({super.key});
@@ -17,6 +14,15 @@ class UpgradePlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var purchaseController = Get.find<PurchaseController>();
+    if (purchaseController.currentPurchaseDetail.value != null &&
+        purchaseController.isRestore) {
+      purchaseController.isRestore = false;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        DialogHelpers.showMessage('You had upgraded to PRO and continue with'
+            ' ${purchaseController.currentPurchaseDetail.value
+            ?.productID} plan.');
+      });
+    }
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'Upgrade to PRO!',
@@ -37,7 +43,6 @@ class UpgradePlanScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          print(purchaseController.productDetailList.first.toString());
           return ListView.separated(
             itemCount: purchaseController.productDetailList.length + 1,
             padding: const EdgeInsets.symmetric(
@@ -48,27 +53,44 @@ class UpgradePlanScreen extends StatelessWidget {
               height: Dimensions.paddingSizeDefault,
             ),
             itemBuilder: (itemCtx, index) {
-              if (index == 0) {
-                return PlanItem(
-                  shortDescription: 'Enjoy all benefits, (save over 30%)',
-                  price: 'Free',
-                  duration: 'Life time',
-                  descriptionList: AppConstants.freeDescription,
-                  currentPlan: true,
-                  mostPopular: true,
-                  onSelectPlan: () {},
-                );
-              } else {
-                var item = purchaseController.productDetailList[index - 1];
-                return PlanItem(
-                  shortDescription: 'Enjoy all benefits, (save over 30%)',
-                  price: '${item.currencySymbol}${item.price}',
-                  duration: item.currencyCode,
-                  descriptionList: AppConstants.planDescription,
-                  mostPopular: index == 2,
-                  onSelectPlan: () {},
-                );
-              }
+              return Obx(() {
+                bool currentPlan = false;
+                if (purchaseController.currentPurchaseDetail.value == null &&
+                    index == 0) {
+                  currentPlan = true;
+                } else if (index > 0) {
+                  currentPlan = currentPlan ||
+                      purchaseController.currentPurchaseDetail.value?.productID
+                              .compareTo(purchaseController
+                                  .productDetailList[index - 1].id) ==
+                          0;
+                }
+                if (index == 0) {
+                  return PlanItem(
+                    shortDescription: 'Enjoy all benefits, (save over 30%)',
+                    price: 'Free',
+                    duration: 'Life time',
+                    descriptionList: AppConstants.freeDescription,
+                    currentPlan: currentPlan,
+                    freePlan: true,
+                  );
+                } else {
+                  var item = purchaseController.productDetailList[index - 1];
+                  return Obx(
+                    () => PlanItem(
+                      shortDescription: 'Enjoy all benefits, (save over 30%)',
+                      price:
+                          '${item.currencySymbol}${NumberFormat().format(item.rawPrice)}',
+                      duration: item.title,
+                      descriptionList: AppConstants.planDescription,
+                      mostPopular: index == 3,
+                      currentPlan: currentPlan,
+                      purchasing: purchaseController.purchasing.isTrue,
+                      onSelectPlan: () => purchaseController.buyItem(item),
+                    ),
+                  );
+                }
+              });
             },
           );
         }),
