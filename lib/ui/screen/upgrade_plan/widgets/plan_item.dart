@@ -11,6 +11,7 @@ class PlanItem extends StatelessWidget {
     required this.price,
     required this.duration,
     required this.descriptionList,
+    this.freeTrial = '',
     this.currentPlan = false,
     this.mostPopular = false,
     this.freePlan = false,
@@ -21,6 +22,7 @@ class PlanItem extends StatelessWidget {
   final String shortDescription;
   final String price;
   final String duration;
+  final String freeTrial;
   final List<String> descriptionList;
   final bool currentPlan;
   final bool mostPopular;
@@ -46,6 +48,16 @@ class PlanItem extends StatelessWidget {
               )),
           child: Column(
             children: [
+              if (freeTrial.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: Dimensions.paddingSizeSmall,
+                  ),
+                  child: Text(
+                    freeTrial,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
               currentPlan
                   ? Text(
                       price,

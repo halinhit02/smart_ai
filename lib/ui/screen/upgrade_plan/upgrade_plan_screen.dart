@@ -128,6 +128,7 @@ class UpgradePlanScreen extends StatelessWidget {
                               price:
                                   '${item.currencySymbol}${NumberFormat().format(item.rawPrice)}',
                               duration: item.title,
+                              freeTrial: AppConstants.freeTrials[index - 1],
                               descriptionList: AppConstants.planDescription,
                               mostPopular: index == 3,
                               currentPlan: currentPlan,

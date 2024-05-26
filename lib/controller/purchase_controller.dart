@@ -91,8 +91,8 @@ class PurchaseController extends GetxController {
       List<PurchaseDetails> purchaseDetailsList) async {
     purchaseDetailsList.sort((a, b) => int.parse(a.transactionDate ?? '0')
         .compareTo(int.parse(b.transactionDate ?? '0')));
-    purchasing.value = true;
     for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
+      purchasing.value = true;
       await _handlePurchase(purchaseDetails);
     }
   }

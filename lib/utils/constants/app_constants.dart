@@ -76,6 +76,13 @@ class AppConstants {
     'smartai_year',
   ];
 
+  static const freeTrials = [
+    '',
+    '3 days Free Trial',
+    '3 days Free Trial',
+    '7 days Free Trial',
+  ];
+
   static var assistants = [
     {
       'id': 1,
