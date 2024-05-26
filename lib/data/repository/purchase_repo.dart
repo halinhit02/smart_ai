@@ -52,14 +52,9 @@ class PurchaseRepo {
     }
   }
 
-  restorePurchase() async {
+  Future restorePurchase() async {
     return await _inAppPurchase.restorePurchases(
         applicationUserName: AppConstants.appName);
-    /*if (Platform.isIOS) {
-      return await FlutterInappPurchase.instance.getPurchaseHistory();
-    } else if (Platform.isAndroid) {
-
-    }*/
   }
 
   Future<bool> isExpiredProduct(PurchaseDetails purchaseDetails) async {
@@ -67,7 +62,8 @@ class PurchaseRepo {
             int.parse(purchaseDetails.transactionDate ?? '0'))
         .millisecondsSinceEpoch;
     int serverTime = AppHelper.getServerTimeMillis(utc: true);
-    int totalDays = ((serverTime - createTime) / (1000 * 60 * 60 * 60 * 24)).floor();
+    int totalDays =
+        ((serverTime - createTime) / (1000 * 60 * 60 * 60 * 24)).floor();
     int productIndex =
         AppConstants.productIds.indexOf(purchaseDetails.productID);
     if (productIndex == 0) {

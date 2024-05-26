@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_ai/controller/assistant_controller.dart';
 import 'package:smart_ai/ui/widgets/custom_app_bar.dart';
+import 'package:smart_ai/ui/widgets/custom_image.dart';
 import 'package:smart_ai/ui/widgets/message_field_widget.dart';
 import 'package:smart_ai/utils/constants/app_constants.dart';
 import 'package:smart_ai/utils/constants/dimensions.dart';
 
 import '../../../controller/chat_controller.dart';
+import '../../../utils/constants/app_routes.dart';
+import '../../../utils/constants/my_icons.dart';
 
 class CreateAssistantScreen extends StatelessWidget {
   const CreateAssistantScreen({
@@ -32,6 +35,17 @@ class CreateAssistantScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: title,
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.upgradePlan),
+            icon: const CustomImage(
+              path: MyIcons.vip,
+            ),
+          ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

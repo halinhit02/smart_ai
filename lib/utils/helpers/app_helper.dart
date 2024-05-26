@@ -5,7 +5,6 @@ class AppHelper {
 
   static int getServerTimeMillis({bool utc = false}) {
     DateTime startDate = DateTime.now();
-    debugPrint('NTP DateTime: $startDate');
     if (utc) {
       startDate = startDate.toUtc();
     }

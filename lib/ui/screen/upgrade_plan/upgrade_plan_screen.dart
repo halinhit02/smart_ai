@@ -26,8 +26,17 @@ class UpgradePlanScreen extends StatelessWidget {
       });
     }
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Upgrade to PRO!',
+        actions: [
+          TextButton(
+            onPressed: () => purchaseController.restorePurchase(),
+            child: const Text('Restore'),
+          ),
+          const SizedBox(
+            width: Dimensions.paddingSizeExtraSmall,
+          ),
+        ],
       ),
       body: SafeArea(
         child: Obx(() {

@@ -34,6 +34,6 @@ class AppConfig {
     geminiKey: 'AIzaSyCAC-yAcj8qGc4CxEkg7aF_svabt5gZWJg',
     baseUrlKey: 'https://smartai.halinhit.com/v1',
     allowImageGenerationKey: true,
-    allowSignIn: true,
+    allowSignIn: false,
   };
 }

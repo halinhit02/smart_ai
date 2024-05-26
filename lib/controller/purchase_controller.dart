@@ -54,6 +54,17 @@ class PurchaseController extends GetxController {
     }
   }
 
+  Future restorePurchase() async {
+    try {
+      DialogHelpers.showMessage(
+          'Restoring the purchase is currently being verified.');
+      await purchaseRepo.restorePurchase();
+    } catch (e) {
+      DialogHelpers.showErrorMessage(
+          'Something went wrong. Please, try again.');
+    }
+  }
+
   Future _getProductDetails() async {
     try {
       await _getAvailable();
