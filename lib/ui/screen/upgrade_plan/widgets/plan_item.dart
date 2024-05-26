@@ -72,7 +72,11 @@ class PlanItem extends StatelessWidget {
                 height: Dimensions.paddingSizeExtraSmall,
               ),
               Text(
-                currentPlan ? 'Your current plan' : shortDescription,
+                currentPlan
+                    ? 'Your current plan'
+                    : freePlan
+                        ? 'Starter plan'
+                        : shortDescription,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,

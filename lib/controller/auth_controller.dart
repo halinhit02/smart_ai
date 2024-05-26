@@ -76,11 +76,6 @@ class AuthController extends GetxController {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsImlhdCI6MTcxNTk4MDI4OCwiZXhwIjoxNzE4NTcyMjg4fQ.V_Z_G5a4CrWIwybr_Rya05tb7LU9gINtAPeAbbrKmAo');
     } else {
       _userModel.value = authRepo.getUserLocal();
-      if (_userModel.value != null) {
-        if (_userModel.value!.phone.contains('0987654321')) {
-          _userModel.value = null;
-        }
-      }
     }
   }
 

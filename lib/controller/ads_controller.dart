@@ -35,6 +35,7 @@ class AdsController extends GetxController {
   }
 
   _loadAd() async {
+    await Future.delayed(const Duration(seconds: 5));
     await adsRepo.loadBannerAd(BannerAdListener(
       onAdLoaded: (Ad ad) {
         _bannerAd = ad as BannerAd;

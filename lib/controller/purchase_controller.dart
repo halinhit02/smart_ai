@@ -17,7 +17,7 @@ class PurchaseController extends GetxController {
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   RxList<ProductDetails> productDetailList = RxList();
   RxBool productLoading = true.obs;
-  RxBool purchasing = true.obs;
+  RxBool purchasing = false.obs;
   RxBool isAvailable = true.obs;
   bool isRestore = true;
   Rx<PurchaseDetails?> currentPurchaseDetail = Rx(null);
