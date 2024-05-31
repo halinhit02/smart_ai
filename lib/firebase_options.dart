@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA7oWCot3SY0q71dapnGu-tqIAFzr1_6rE',
-    appId: '1:1075672584307:android:ddd474973554aba4eb1a06',
+    appId: '1:1075672584307:android:c574ca914c1164f3eb1a06',
     messagingSenderId: '1075672584307',
     projectId: 'smartai-d8cac',
     storageBucket: 'smartai-d8cac.appspot.com',

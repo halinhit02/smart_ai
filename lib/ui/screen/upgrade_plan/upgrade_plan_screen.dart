@@ -19,12 +19,12 @@ class UpgradePlanScreen extends StatelessWidget {
     var purchaseController = Get.find<PurchaseController>();
     if (purchaseController.currentPurchaseDetail.value != null &&
         purchaseController.isRestore) {
-      purchaseController.isRestore = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         DialogHelpers.showMessage('You had upgraded to PRO and continue with'
             ' ${purchaseController.currentPurchaseDetail.value?.productID} plan.');
       });
     }
+    purchaseController.isRestore = false;
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Upgrade to PRO!',
